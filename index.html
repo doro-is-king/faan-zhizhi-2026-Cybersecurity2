@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人主页 | GitHub Pages 示例</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <a href=" " class="logo">MyPortfolio</a >
+            <ul class="nav-links">
+                <li><a href="#home">首页</a ></li>
+                <li><a href="#about">关于</a ></li>
+                <li><a href="#skills">技能</a ></li>
+                <li><a href="#projects">项目</a ></li>
+                <li><a href="#contact">联系</a ></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="avatar-container">
+                    < img src="assets/avatar.png" alt="个人头像" class="avatar">
+                </div>
+                <h1 class="hero-title">你好，我是 <span class="highlight">开发者</span></h1>
+                <p class="hero-subtitle">前端开发者 | UI/UX 爱好者 | 技术博主</p >
+                <p class="hero-description">专注于创建美观、高效、用户友好的Web应用，热衷于探索新技术和分享知识。</p >
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">查看项目</a >
+                    <a href="#contact" class="btn btn-secondary">联系我</a >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about" class="section about">
+        <div class="container">
+            <h2 class="section-title">关于我</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>我是一名充满热情的前端开发者，拥有3年Web开发经验。擅长使用现代前端技术栈构建响应式网站和Web应用。</p >
+                    <p>我相信好的设计不仅仅是美观，更重要的是提供优秀的用户体验。我热衷于学习新技术，并乐于在社区中分享知识。</p >
+                    <p>在业余时间，我喜欢阅读技术博客、参加开发者大会，并尝试各种新的开发工具和框架。</p >
+                </div>
+                <div class="about-stats">
+                    <div class="stat">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">完成项目</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">3+</span>
+                        <span class="stat-label">年经验</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">客户满意度</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技能展示 -->
+    <section id="skills" class="section skills">
+        <div class="container">
+            <h2 class="section-title">技术栈</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fab fa-html5"></i>
+                    </div>
+                    <h3 class="skill-title">HTML5 & CSS3</h3>
+                    <p class="skill-desc">语义化标签、Flexbox、Grid、CSS动画、响应式设计</p >
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fab fa-js"></i>
+                    </div>
+                    <h3 class="skill-title">JavaScript</h3>
+                    <p class="skill-desc">ES6+、DOM操作、异步编程、模块化开发</p >
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fab fa-react"></i>
+                    </div>
+                    <h3 class="skill-title">React</h3>
+                    <p class="skill-desc">组件开发、状态管理、Hooks、React Router</p >
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">
+                        <i class="fab fa-git-alt"></i>
+                    </div>
+                    <h3 class="skill-title">Git & GitHub</h3>
+                    <p class="skill-desc">版本控制、协作开发、CI/CD、GitHub Pages</p >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 项目展示 -->
+    <section id="projects" class="section projects">
+        <div class="container">
+            <h2 class="section-title">精选项目</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <div class="image-placeholder">项目预览</div>
+        
