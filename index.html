@@ -3,267 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>法安智治 · 市域网络风险监测与智能调解一体化平台</title><link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"><style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Inter',sans-serif;background:#fafbfc;color:#1e293b;line-height:1.6;}
-    .container{max-width:1200px;margin:0 auto;padding:0 24px;}.navbar{background:#0b1e33;padding:16px 0;position:sticky;top:0;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
-.navbar .container{display:flex;align-items:center;justify-content:space-between;}
-.logo{font-size:1.8rem;font-weight:700;color:#fff;text-decoration:none;letter-spacing:-0.5px;}
-.logo span{color:#3b9eff;}
-.nav-links{display:flex;gap:32px;list-style:none;}
-.nav-links li a{color:#e0f2fe;text-decoration:none;font-weight:500;transition:color 0.2s;}
-.nav-links li a:hover{color:#ffffff;}
-.menu-toggle{background:transparent;border:none;color:white;font-size:1.8rem;display:none;cursor:pointer;}.hero{padding:80px 0 100px;background:linear-gradient(145deg, #f0f7ff 0%, #e6f0fc 100%);}
-.hero-content{display:flex;flex-direction:column;align-items:center;text-align:center;}
-.avatar-container{margin-bottom:24px;}
-.avatar{width:130px;height:130px;border-radius:50%;object-fit:cover;border:4px solid white;box-shadow:0 12px 24px -8px rgba(0,35,70,0.15);}
-.hero-title{font-size:3.2rem;font-weight:700;color:#0b1e33;margin-bottom:16px;}
-.highlight{color:#0a66c2;background:linear-gradient(120deg, #d4e6ff 0%, #d4e6ff 70%, transparent 90%);padding:0 8px;}.hero-subtitle{font-size:1.4rem;color:#2c3e50;margin-bottom:16px;font-weight:500;}
-.hero-description{font-size:1.2rem;max-width:800px;margin:0 auto 32px;color:#334155;}
-.btn{display:inline-block;padding:14px 34px;border-radius:40px;font-weight:600;text-decoration:none;margin:8px;transition:all 0.2s;}
-.btn-primary{background:#0a66c2;color:white;box-shadow:0 8px 18px rgba(10,102,194,0.25);}
-.btn-primary:hover{background:#084d96;transform:translateY(-2px);}
-.btn-secondary{background:white;color:#0b1e33;border:1.5px solid #0a66c2;}
-.btn-secondary:hover{background:#0a66c2;color:white;}.section{padding:80px 0;}
-.section-title{font-size:2.5rem;font-weight:700;text-align:center;margin-bottom:56px;color:#0b1e33;}
-.about-content{display:flex;gap:48px;flex-wrap:wrap;}
-.about-text{flex:2;min-width:280px;}
-.about-text p{margin-bottom:20px;font-size:1.1rem;color:#334155;}.about-stats{flex:1;display:flex;justify-content:space-around;gap:20px;background:#ffffffd6;padding:30px 20px;border-radius:32px;box-shadow:0 15px 30px -10px rgba(0,0,0,0.05);}
-.stat{text-align:center;}
-.stat-number{display:block;font-size:2.8rem;font-weight:800;color:#0a66c2;}
-.stat-label{font-size:1rem;color:#475569;}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:30px;}
-.skill-card{background:white;padding:32px 24px;border-radius:28px;box-shadow:0 12px 30px -8px rgba(0,0,0,0.05);transition:all 0.2s;border:1px solid #eef2f6;}
-.skill-card:hover{transform:translateY(-6px);box-shadow:0 24px 36px -12px rgba(10,102,194,0.12);}
-.skill-icon{font-size:2.8rem;color:#0a66c2;margin-bottom:20px;}
-.skill-title{font-size:1.5rem;margin-bottom:12px;}
-.skill-desc{color:#475569;}.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;}
-.project-card{background:white;border-radius:24px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,0.04);border:1px solid #e9edf2;}
-.project-image{height:180px;background:#d4e2f0;display:flex;align-items:center;justify-content:center;color:#1e3a5f;font-weight:600;}
-.project-content{padding:24px;}
-.project-content h3{font-size:1.6rem;margin-bottom:12px;}
-.footer{background:#0b1e33;color:#cbd5e1;padding:40px 0;text-align:center;}        @media (max-width:768px){
-            .nav-links{display:none;flex-direction:column;background:#0b1e33;position:absolute;top:70px;left:0;width:100%;padding:20px;}
-            .nav-links.active{display:flex;}
-            .menu-toggle{display:block;}
-            .hero-title{font-size:2.5rem;}
-        }
-        .badge{background:#e6f0ff;color:#0a66c2;padding:6px 16px;border-radius:30px;font-weight:500;display:inline-block;margin-bottom:16px;}
-        .phase-timeline{display:flex;flex-wrap:wrap;gap:24px;margin-top:30px;}
-        .phase-item{flex:1;min-width:180px;background:#f8fafc;padding:20px;border-radius:20px;border-left:6px solid #0a66c2;}
-    </style>
+    <title>法安智治 · 青春守护网络平安</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body><nav class="navbar">
     <div class="container">
-        <a href=" " class="logo">法安<span>智治</span></a >
+        <a href=" " class="logo"><i class="fas fa-shield-alt" style="margin-right:6px;"></i>法安智治</a >
         <ul class="nav-links" id="navLinks">
             <li><a href="#home">首页</a ></li>
-            <li><a href="#about">项目总览</a ></li>
-            <li><a href="#skills">核心技术</a ></li>
-            <li><a href="#projects">核心功能</a ></li>
-            <li><a href="#roadmap">实施阶段</a ></li>
-            <li><a href="#contact">联系我们</a ></li>
+            <li><a href="#features">核心功能</a ></li>
+            <li><a href="#team">团队</a ></li>
+            <li><a href="#roadmap">规划</a ></li>
+            <li><a href="cases.html">案例库</a ></li>
+            <li><a href="chat.html">智能咨询</a ></li>
         </ul>
         <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
     </div>
 </nav><section id="home" class="hero">
-    <div class="container">
+    <div class="container hero-grid">
         <div class="hero-content">
-            <div class="avatar-container">
-                < img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%230b1e33'/%3E%3Cpath fill='%233b9eff' d='M50 25 L65 40 L60 40 L60 65 L40 65 L40 40 L35 40 Z'/%3E%3Ctext x='34' y='80' fill='white' font-size='12' font-weight='bold'%3E法安%3C/text%3E%3C/svg%3E" alt="法安智治标识" class="avatar">
+            <span class="badge"><i class="fas fa-trophy"></i> 互联网+ 高教主赛道 · 创意组</span>
+            <h1 class="hero-title">用<span class="gradient-text">多模态AI</span><br>守护市域网络平安</h1>
+            <p class="hero-desc">监测·预警·调解一体化平台，让涉网纠纷化解在基层。<br>大一跨专业团队，青春力量赋能数字法治。</p >
+            <div class="hero-stats">
+                <div class="stat-item"><h3>6+</h3><p>风险类别覆盖</p ></div>
+                <div class="stat-item"><h3>50+</h3><p>合作调解员</p ></div>
+                <div class="stat-item"><h3>100+</h3><p>试点案例</p ></div>
             </div>
-            <span class="badge"><i class="fas fa-shield-alt" style="margin-right:8px;"></i>互联网+ 高教主赛道 · 创意组</span>
-            <h1 class="hero-title">法安智治 · <span class="highlight">监测·调解一体化</span></h1>
-            <p class="hero-subtitle">基于多模态识别的市域网络风险监测与涉网纠纷智能调解平台</p >            <p class="hero-description">事前风险预警 · 事中干预化解 · 事后智能调解 —— 为基层治理打造全流程闭环，用青年技术守护网络平安。</p >
-            <div class="hero-buttons">
-                <a href=" " class="btn btn-primary"><i class="fas fa-microchip"></i> 核心功能</a >
-                <a href="#contact" class="btn btn-secondary"><i class="fas fa-handshake"></i> 校地合作</a >
-            </div>
-            <div style="margin-top:36px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
-                <span style="background:rgba(255,255,255,0.7); padding:6px 18px; border-radius:30px; font-weight:500;"><i class="fas fa-check-circle" style="color:#0a66c2;"></i> 多模态融合识别</span>
-                <span style="background:rgba(255,255,255,0.7); padding:6px 18px; border-radius:30px; font-weight:500;"><i class="fas fa-check-circle" style="color:#0a66c2;"></i> AI法律大模型</span>
-                <span style="background:rgba(255,255,255,0.7); padding:6px 18px; border-radius:30px; font-weight:500;"><i class="fas fa-check-circle" style="color:#0a66c2;"></i> 区块链司法存证</span>
+            <a href=" " class="btn btn-primary"><i class="fas fa-arrow-down"></i> 探索平台</a >
+            <a href="chat.html" class="btn btn-outline" style="margin-left:12px;"><i class="fas fa-robot"></i> AI 智能咨询</a >
+        </div>        <div class="hero-visual">
+            <i class="fas fa-network-wired"></i>
+            <h3 style="margin-bottom:10px;">监测 · 调解 · 闭环</h3>
+            <p>基于Qwen3-VL · 北大法宝 · 司法区块链</p >
+            <div style="margin-top:30px;display:flex;gap:10px;justify-content:center;">
+                <span style="background:white;padding:8px 18px;border-radius:40px;"><i class="fab fa-html5"></i> 轻量部署</span>
+                <span style="background:white;padding:8px 18px;border-radius:40px;"><i class="fas fa-lock"></i> 存证可溯</span>
             </div>
         </div>
     </div>
-</section><section id="about" class="section about">
+</section><section id="features" class="section">
     <div class="container">
-        <h2 class="section-title">项目总论 · 青年赋能基层法治</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <p><strong>法安智治</strong> —— 由网络空间安全专业大一学生发起的跨专业创新项目。针对市域基层“监测手段滞后、调解力量不足、技术适配差”的痛点，打造“事前风险监测预警 - 事中矛盾干预化解 - 事后纠纷智能调解”一体化平台。</p >
-                <p>我们立足校园、辐射市域，通过多模态识别技术实时监测网络谣言、网暴、诈骗等风险；同时提供零门槛涉网纠纷调解通道，对接司法局、调解员与区块链存证。项目已获校级双创重点孵化，与兰州市属地司法所达成合作意向，致力于成为甘肃省高校服务市域社会治理的标杆。</p >
-                <p><i class="fas fa-bullseye" style="color:#0a66c2; margin-right:8px;"></i><strong>核心定位：</strong>技术赋能基层法治，青春守护网络平安。</p >
-            </div>            <div class="about-stats">
-                <div class="stat">
-                    <span class="stat-number">50+</span>
-                    <span class="stat-label">合作意向单位</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">3阶</span>
-                    <span class="stat-label">36个月实施规划</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number">6类</span>
-                    <span class="stat-label">风险识别覆盖</span>
-                </div>
+        <h2 class="section-title">三大核心能力</h2>
+        <p class="section-subtitle">事前预警·事中干预·事后调解，全流程闭环</p >
+        <div class="grid-3">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-eye"></i></div>
+                <h3>多模态风险监测</h3>
+                <p>融合文本、图片、音视频识别，覆盖谣言、网暴、诈骗等6大类风险，四级预警秒级响应。</p >
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3>智能纠纷调解</h3>
+                <p>小程序一键申请，AI法律大模型辅助匹配调解员，线上视频调解+电子签章，对接司法确认。</p >
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-link"></i></div>
+                <h3>区块链存证</h3>
+                <p>调解全流程上链，对接最高法司法链，证据不可篡改，降低维权门槛。</p >
             </div>
         </div>
     </div>
-</section><section id="skills" class="section skills">
+</section><section id="team" class="section" style="background:#f1f5fe;">
     <div class="container">
-        <h2 class="section-title">核心技术方案 · 开源适配·轻量落地</h2>
-        <div class="skills-grid">
-            <div class="skill-card">
-                <div class="skill-icon"><i class="fas fa-eye"></i></div>
-                <h3 class="skill-title">多模态融合识别</h3>
-                <p class="skill-desc">基于Qwen3-VL开源模型微调，构建10万+市域风险数据集。融合文本、图像、音视频特征，精准识别网络谣言、网暴、侵权等6大类30+小类风险，分级预警。</p >
+        <h2 class="section-title">我们是一支跨专业青年团队</h2>
+        <p class="section-subtitle">网络空间安全 · 法学 · 大数据 · 行政管理</p >
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-avatar" style="background:#0a66c2;">张</div>
+                <div class="member-name">张一鸣</div>
+                <div class="member-role">项目负责人</div>
+                <p>网安专业，统筹技术架构</p >
             </div>
-            <div class="skill-card">
-                <div class="skill-icon"><i class="fas fa-robot"></i></div>
-                <h3 class="skill-title">AI法律大模型</h3>
-                <p class="skill-desc">北大法宝开源法律大模型适配调解场景，智能咨询、类案匹配、文书生成、争议焦点提取，降低调解专业门槛，提升效率。</p >
+            <div class="team-member">
+                <div class="member-avatar" style="background:#7c3aed;">李</div>
+                <div class="member-name">李思睿</div>
+                <div class="member-role">算法组长</div>
+                <p>负责多模态模型微调</p >
             </div>
-            <div class="skill-card">
-                <div class="skill-icon"><i class="fas fa-link"></i></div>
-                <h3 class="skill-title">区块链存证 & 安全</h3>
-                <p class="skill-desc">对接蚂蚁链、最高法司法区块链，调解全流程上链存证，不可篡改。国密加密、隐私计算保障数据安全，符合《个人信息保护法》。</p >
+            <div class="team-member">
+                <div class="member-avatar" style="background:#059669;">王</div>
+                <div class="member-name">王珺瑶</div>
+                <div class="member-role">法务负责人</div>
+                <p>法学专业，合规审核</p >
             </div>
-            <div class="skill-card">
-                <div class="skill-icon"><i class="fas fa-chart-pie"></i></div>
-                <h3 class="skill-title">轻量化大数据中台</h3>
-                <p class="skill-desc">Hadoop/Spark轻量版，构建风险监测、纠纷案例库；开源BI可视化看板，为基层政府提供实时决策支撑。</p >
+            <div class="team-member">
+                <div class="member-avatar" style="background:#d97706;">陈</div>
+                <div class="member-name">陈一舟</div>
+                <div class="member-role">产品运营</div>
+                <p>对接政府/调解员</p >
             </div>
         </div>
-        <p style="text-align:center; margin-top:30px; color:#2c3e50;"><i class="fas fa-check"></i> 坚持“成熟开源技术+场景化二次开发”，适配大一团队能力，确保基层易部署、低成本。</p >
+        <div style="text-align:center; margin-top:30px;">
+            <span class="badge"><i class="fas fa-user-graduate"></i> 双导师制：校内学术导师 + 司法局行业导师</span>
+        </div>
     </div>
-</section><section id="projects" class="section projects">
+</section><section id="roadmap" class="section">
     <div class="container">
-        <h2 class="section-title">平台核心功能 · 监测调解一体化闭环</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-image" style="background:#0f2b4b; color:white; display:flex; flex-direction:column; justify-content:center;">
-                    <i class="fas fa-radar" style="font-size:3rem; margin-bottom:8px;"></i> 多模态风险监测预警
-                </div>
-                <div class="project-content">
-                    <h3>全网风险感知</h3>
-                    <p>合规采集市域公开多模态信息，微调模型识别网络谣言、暴力、诈骗等。四级预警机制，可视化热力图辅助网信/政法委决策，实现“早发现”。</p >
-                    <p style="margin-top:12px;"><i class="fas fa-database"></i> 已构建专属数据集10万+样本</p >
-                </div>
-            </div>            <div class="project-card">
-                <div class="project-image" style="background:#1e4b6e; color:white; display:flex; flex-direction:column; justify-content:center;">
-                    <i class="fas fa-hand-holding-heart" style="font-size:3rem; margin-bottom:8px;"></i> 涉网纠纷智能调解
-                </div>
-                <div class="project-content">
-                    <h3>一键维权·零门槛</h3>
-                    <p>小程序/网页端提交纠纷，AI自动分流、匹配调解员。线上视频调解室、证据质证、电子签章。调解成功一键申请司法确认，对接法院系统。</p >
-                    <p><i class="fas fa-users"></i> 已邀约50+调解员/律师入驻</p >
-                </div>
-            </div>
-            <div class="project-card">
-                <div class="project-image" style="background:#2a5c8a; color:white; display:flex; flex-direction:column; justify-content:center;">
-                    <i class="fas fa-sitemap" style="font-size:3rem; margin-bottom:8px;"></i> 一体化协同中台
-                </div>
-                <div class="project-content">
-                    <h3>监测-调解数据互通</h3>
-                    <p>打通网信、司法数据壁垒，监测风险直接转为调解案源。多部门联合处置，全流程可追溯。反向优化识别模型，实现双向赋能。</p >
-                    <p><i class="fas fa-shield"></i> 公益化运营 · 基层政府基础版免费</p >
-                </div>
-            </div>
+        <h2 class="section-title">阶梯式实施规划</h2>
+        <p class="section-subtitle">从校园试点到全省推广，36个月清晰路径</p >
+        <div class="timeline">
+            <div class="timeline-item"><span class="timeline-year">阶段一</span><h3>原型开发</h3><p>1-6月 · 数据集构建 · 软著申请 · 校园试点</p ></div>
+            <div class="timeline-item"><span class="timeline-year">阶段二</span><h3>市域试点</h3><p>7-18月 · 2区司法局合作 · 50+调解员 · 小程序上线</p ></div>
+            <div class="timeline-item"><span class="timeline-year">阶段三</span><h3>全市覆盖</h3><p>19-36月 · 兰州全覆盖 · 自我造血 · 标准化模式</p ></div>
+            <div class="timeline-item"><span class="timeline-year">阶段四</span><h3>全省辐射</h3><p>37月+ · 推广甘肃 · 数字法治实验室</p ></div>
         </div>
     </div>
-</section><section id="roadmap" class="section" style="background:#f3f9ff;">
+</section><section id="contact" class="section" style="background:linear-gradient(145deg,#0b1e33,#1e2a4a);color:white;">
+    <div class="container" style="text-align:center;">
+        <h2 class="section-title" style="color:white;">校地协同 · 共筑清朗网络</h2>
+        <p style="max-width:700px;margin:0 auto 40px;font-size:1.2rem;">已与兰州市司法局、安宁区网信办达成合作意向，欢迎更多伙伴加入！</p >
+        <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+            <div style="background:rgba(255,255,255,0.08);padding:25px;border-radius:28px;min-width:200px;"><i class="fas fa-envelope" style="font-size:2rem;color:#3b9eff;"></i><h3 style="margin:15px 0;">项目邮箱</h3><p>faan@team.cn</p ></div>
+            <div style="background:rgba(255,255,255,0.08);padding:25px;border-radius:28px;min-width:200px;"><i class="fas fa-map-pin" style="font-size:2rem;color:#3b9eff;"></i><h3 style="margin:15px 0;">试点基地</h3><p>甘肃·兰州 高校双创园</p ></div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
     <div class="container">
-        <h2 class="section-title">分阶段实施 · 阶梯式建设目标</h2>
-        <div class="phase-timeline">
-            <div class="phase-item">
-                <h3 style="display:flex; align-items:center; gap:8px;"><i class="fas fa-flask" style="color:#0a66c2;"></i> 第一阶段</h3>
-                <p style="font-weight:600;">创意孵化·原型开发 (1-6月)</p >
-                <p>完善跨专业团队，双导师制；市场调研1000+问卷；原型demo与数据集；软著申请；校园试点合作达成。</p >
-            </div>
-            <div class="phase-item">
-                <h3 style="display:flex; align-items:center; gap:8px;"><i class="fas fa-city" style="color:#0a66c2;"></i> 第二阶段</h3>
-                <p style="font-weight:600;">试点落地·功能优化 (7-18月)</p >
-                <p>校园+2个区司法局试点；50+调解员入驻；网页端/小程序上线；积累100+成功案例，模型迭代。</p >
-            </div>
-            <div class="phase-item">
-                <h3 style="display:flex; align-items:center; gap:8px;"><i class="fas fa-chart-line" style="color:#0a66c2;"></i> 第三阶段</h3>
-                <p style="font-weight:600;">市域推广·标准化 (19-36月)</p >
-                <p>兰州市全覆盖；形成可复制模式；增值服务实现盈亏平衡；组建高校法律服务联盟。</p >
-            </div>
-            <div class="phase-item">
-                <h3 style="display:flex; align-items:center; gap:8px;"><i class="fas fa-globe" style="color:#0a66c2;"></i> 第四阶段</h3>
-                <p style="font-weight:600;">全省辐射·品牌升级 (37月+)</p >
-                <p>推广至甘肃全省；共建数字法治实验室；打造全国大学生基层治理标杆项目。</p >
-            </div>
-        </div>
-        <p style="text-align:center; margin-top:32px; background:white; padding:20px; border-radius:50px; max-width:700px; margin-left:auto; margin-right:auto; box-shadow:0 4px 10px rgba(0,0,0,0.02);">
-            <i class="fas fa-bullhorn" style="color:#0a66c2;"></i> 总投资估算50万元，已获校创扶持+大赛奖金，坚持公益普惠，基础服务全免费。
-        </p >
+        <p>© 2026 法安智治 · 互联网+ 大学生创新创业大赛 · 高教主赛道创意组</p >
+        <p style="margin-top:15px;">青春守护网络平安 —— 大一跨专业团队</p >
     </div>
-</section>    <section id="contact" class="section" style="background:#0b1e33; color:white;">
-        <div class="container" style="text-align:center;">
-            <h2 class="section-title" style="color:white;">校地协同 · 共筑清朗网络</h2>
-            <p style="font-size:1.2rem; margin-bottom:32px; max-width:700px; margin-left:auto; margin-right:auto;">我们是大一跨专业团队（网络空间安全、法学、大数据），已与兰州市司法局、网信办达成初步合作意向。欢迎政府机构、调解组织、高校伙伴加入！</p >
-            <div style="display:flex; justify-content:center; gap:30px; flex-wrap:wrap;">
-                <div style="background:rgba(255,255,255,0.08); padding:24px 32px; border-radius:28px;">
-                    <i class="fas fa-envelope" style="font-size:2rem; margin-bottom:12px; color:#3b9eff;"></i>
-                    <h3>项目联络</h3>
-                    <p>faanzhizhi@edu.cn · 大赛官方邮箱</p >
-                </div>
-                <div style="background:rgba(255,255,255,0.08); padding:24px 32px; border-radius:28px;">
-                    <i class="fas fa-map-marker-alt" style="font-size:2rem; margin-bottom:12px; color:#3b9eff;"></i>
-                    <h3>试点基地</h3>
-                    <p>甘肃·兰州 · 高校双创中心 / 安宁区司法局协同创新实验室</p >
-                </div>
-                <div style="background:rgba(255,255,255,0.08); padding:24px 32px; border-radius:28px;">
-                    <i class="fas fa-file-alt" style="font-size:2rem; margin-bottom:12px; color:#3b9eff;"></i>
-                    <h3>项目策划书</h3>
-                    <p>互联网+ 高教主赛道创意组 · 完整版备索</p >
-                </div>
-            </div>
-            <div style="margin-top:50px;">
-                <a href=" " style="display:inline-block; background:#3b9eff; color:white; padding:14px 40px; border-radius:40px; text-decoration:none; font-weight:600;"><i class="fas fa-hand-pointer"></i> 成为试点合作单位</a >
-                <p style="margin-top:24px; opacity:0.8;">“事前看不见、事中管不住、事后解不开”——我们致力于改变这一现状。</p >
-            </div>
+</footer><div class="ai-fab">
+    <button class="ai-fab-btn" id="aiFabBtn"><i class="fas fa-robot"></i></button>
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="chat-header"><i class="fas fa-comment-dots"></i> 法安智治 · AI 助手</div>
+        <div class="chat-body" id="chatBody">
+            <p><strong>AI小安：</strong> 你好！我可以帮你解答涉网纠纷相关问题，或引导你使用调解平台。试试问我“如何举报网络谣言”？</p >
         </div>
-    </section>
-    <footer class="footer">
-        <div class="container">
-            <p>© 2026 法安智治 · 基于多模态识别的市域网络风险监测与涉网纠纷智能调解一体化平台</p >
-            <p style="margin-top:12px; font-size:0.9rem;">互联网+ 大学生创新创业大赛 · 高教主赛道创意组 | 大一跨专业团队 · 青春守护网络平安</p >
-            <p style="margin-top:20px;">
-                <a href="#" style="color:#94a3b8; margin:0 12px;"><i class="fab fa-github"></i></a >
-                <a href="#" style="color:#94a3b8; margin:0 12px;"><i class="fas fa-book"></i> 项目白皮书</a >
-            </p >
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="输入你的问题...">
+            <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
         </div>
-    </footer>
-    <script>
-        (function(){
-            const toggle = document.getElementById('menuToggle');
-            const nav = document.getElementById('navLinks');
-            if(toggle && nav){
-                toggle.addEventListener('click', function(){
-                    nav.classList.toggle('active');
-                });
-            }
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    const href = this.getAttribute('href');
-                    if(href === "#" || href === "") return;
-                    const target = document.querySelector(href);
-                    if(target){
-                        e.preventDefault();
-                        target.scrollIntoView({ behavior: 'smooth' });
-                        if(nav.classList.contains('active')) nav.classList.remove('active');
-                    }
-                });
-            });
-        })();
-    </script>
+    </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
