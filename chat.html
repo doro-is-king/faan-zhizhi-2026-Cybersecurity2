@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>法安智治 · AI 智能咨询</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .chat-page-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+        }
+        .chat-page-header {
+            background: #0a66c2;
+            color: white;
+            padding: 24px 30px;
+        }
+        .chat-page-body {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            background: #fafbfc;
+        }
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        .message.user {
+            justify-content: flex-end;
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 14px 20px;
+            border-radius: 24px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .message.user .message-bubble {
+            background: #0a66c2;
+            color: white;
+        }
+        .chat-page-input {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+        .chat-page-input input {
+            flex: 1;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 60px;
+            outline: none;
+            font-size: 1rem;
+        }
+        .chat-page-input button {
+            background: #0a66c2;
+            color: white;
+            border: none;
+            padding: 0 30px;
+            margin-left: 12px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body><nav class="navbar">
+    <div class="container">
+        <a href=" " class="logo"><i class="fas fa-shield-alt"></i>法安智治</a >
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">首页</a ></li>
+            <li><a href="index.html#features">核心功能</a ></li>
+            <li><a href="index.html#team">团队</a ></li>
+            <li><a href="cases.html">案例库</a ></li>
+            <li><a href="chat.html">智能咨询</a ></li>
+        </ul>
+        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    </div>
+</nav><div class="container">
+    <div class="chat-page-container">
+        <div class="chat-page-header">
+            <h2><i class="fas fa-robot"></i> 法安智治 AI 法律助手</h2>
+            <p style="opacity:0.9; margin-top:6px;">基于多模态识别与法律大模型，为你提供涉网纠纷咨询</p >
+        </div>
+        <div class="chat-page-body" id="chatPageBody">
+            <div class="message">
+                <div class="message-bubble"><strong>AI小安：</strong> 你好！我是你的智能法律助手。你可以问我网络侵权、谣言举报、纠纷调解流程等问题。</div>
+            </div>
+        </div>
+        <div class="chat-page-input">
+            <input type="text" id="chatPageInput" placeholder="输入你的问题...">
+            <button id="chatPageSendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
+        </div>
+    </div>
+</div><script>
+    (function(){
+        const toggle = document.getElementById('menuToggle');
+        const nav = document.getElementById('navLinks');
+        if(toggle) toggle.addEventListener('click',()=>nav.classList.toggle('active'));
+
+        const body = document.getElementById('chatPageBody');
+        const input = document.getElementById('chatPageInput');
+        const sendBtn = document.getElementById('chatPageSendBtn');
+
+        function addMessage(text, isUser = true) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'message' + (isUser ? ' user' : '');
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.innerHTML = isUser ? text : '<strong>AI小安：</strong> ' + text;
+            msgDiv.appendChild(bubble);
+            body.appendChild(msgDiv);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', function() {
+            const msg = input.value.trim();
+            if (!msg) return;
+            addMessage(msg, true);
+            input.value = '';
+            setTimeout(() => {
+                let reply = '感谢你的咨询。根据你描述的情况，建议通过平台提交纠纷详情，我们会匹配专业调解员。';
+                if (msg.includes('谣言')) reply = '网络谣言可以通过“一键举报”功能提交证据，平台会进行多模态识别并固定证据链。';
+                else if (msg.includes('侵权')) reply = '网络侵权纠纷可在线提交，平台支持肖像权、名誉权等多种类型，调解全程免费。';
+                addMessage(reply, false);
+            }, 800);
+        });
+
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendBtn.click(); });
+    })();
+</script>
+</body>
+</html>
