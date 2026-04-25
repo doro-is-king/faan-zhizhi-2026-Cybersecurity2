@@ -1,29 +1,109 @@
 <!DOCTYPE html>
- <html lang="zh-CN">
- <head>
-     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>法安智治 - 图库</title>
-     <link rel="stylesheet" href="style.css">
-     <style>
-         .gallery {
-             display: flex;
-             .gallery img:hover {
-                 transform: scale(1.05);
-             }
-             h1 { text-align: center; margin: 30px 0; }
-             .back-link { text-align: center; margin: 20px; font-size: 18px; }
-         }
-     </style>
- </head>
- <body>
-     <h1>📷 法安智治图库</h1>
-     <div class="gallery">
-         <!-- 这里是你上传的图片 -->
-         < img src="c226fc0a81a246679efe2f574fb92df7.jpg" alt="我的图片">
-     </div>
-     <div class="back-link">
-         <a href=" ">← 返回首页</a >
-     </div>
- </body>
- </html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>法安智治 - 项目图库</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .gallery-section {
+            padding: 80px 0;
+        }
+        .gallery-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+        .back-link a {
+            color: #0a66c2;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a href=" " class="logo"><i class="fas fa-shield-alt" style="margin-right:6px;"></i>法安智治</a >
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">首页</a ></li>
+            <li><a href="index.html#features">核心功能</a ></li>
+            <li><a href="index.html#team">团队</a ></li>
+            <li><a href="gallery.html">项目图库</a ></li>
+            <li><a href="chat.html">智能咨询</a ></li>
+        </ul>
+        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    </div>
+</nav>
+
+<section class="gallery-section">
+    <div class="container">
+        <h2 class="section-title gallery-title">📷 法安智治 · 项目图库</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                < img src="c226fc0a81a246679efe2f574fb92df7.jpg" alt="项目图片">
+            </div>
+            <!-- 你可以在这里继续添加更多图片，格式和上面一样：
+            <div class="gallery-item">
+                < img src="你的第二张图片文件名.jpg" alt="描述">
+            </div>
+            -->
+        </div>
+        <div class="back-link">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> ← 返回首页</a >
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 法安智治 · 互联网+ 大学生创新创业大赛</p >
+    </div>
+</footer>
+
+<script>
+    (function() {
+        const toggle = document.getElementById('menuToggle');
+        const nav = document.getElementById('navLinks');
+        if (toggle && nav) {
+            toggle.addEventListener('click', function() {
+                nav.classList.toggle('active');
+            });
+        }
+    })();
+</script>
+</body>
+</html>
