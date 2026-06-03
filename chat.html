@@ -20,20 +20,24 @@
         .chat-page-input button{background:linear-gradient(135deg,#f97316,#ec4899);color:white;border:none;padding:0 30px;margin-left:12px;border-radius:60px;font-weight:600;cursor:pointer;}
     </style>
 </head>
-<body><nav class="navbar"><div class="container">
-    <a href="home.html" class="logo">法安智治</a >
+<body>
+<nav class="navbar"><div class="container">
+    <a href=" " class="logo">法安智治</a >
     <ul class="nav-links" id="navLinks">
-        <li><a href="home.html">首页</a ></li><li><a href="team.html">团队</a ></li><li><a href="plan.html">规划</a ></li><li><a href="chat.html">智能咨询</a ></li>
+        <li><a href="home.html">首页</a ></li>
+        <li><a href="team.html">团队</a ></li>
+        <li><a href="plan.html">规划</a ></li>
+        <li><a href="chat.html">智能咨询</a ></li>
     </ul>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-</div></nav>
-<div class="container"><div class="chat-page-container">
+</div></nav><div class="container"><div class="chat-page-container">
     <div class="chat-page-header"><h2><i class="fas fa-robot"></i> 法安智治 AI 法律助手</h2><p>基于法律大模型，为你解答涉网纠纷问题（当前为模拟版）</p ></div>
     <div class="chat-page-body" id="chatPageBody">
         <div class="message"><div class="message-bubble"><strong>AI小安：</strong> 你好！可以问我网络侵权、纠纷调解流程等问题。</div></div>
     </div>
     <div class="chat-page-input"><input type="text" id="chatPageInput" placeholder="输入你的问题..."><button id="chatPageSendBtn"><i class="fas fa-paper-plane"></i> 发送</button></div>
-</div></div><script>
+</div></div>
+<script>
     const toggle=document.getElementById('menuToggle');const nav=document.getElementById('navLinks');
     if(toggle)toggle.addEventListener('click',()=>nav.classList.toggle('active'));
     const body=document.getElementById('chatPageBody');const input=document.getElementById('chatPageInput');const sendBtn=document.getElementById('chatPageSendBtn');
