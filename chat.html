@@ -11,10 +11,12 @@
         .chat-container { max-width: 800px; margin: 40px auto; background: var(--surface); backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; height: 75vh; }
         .chat-header { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)); padding: 20px 30px; }
         .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg { max-width: 80%; padding: 12px 20px; border-radius: 20px; animation: msgPop 0.3s ease; }
+        .msg { max-width: 80%; padding: 12px 20px; border-radius: 20px; animation: msgPop 0.3s ease; word-break: break-word; }
         .msg.user { align-self: flex-end; background: var(--neon-cyan); color: #000; }
         .msg.bot { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
-        .warning { background: rgba(255,0,0,0.2); border-left: 3px solid red; color: #ff9999; padding: 8px 16px; margin: 5px 0; border-radius: 8px; }
+        .msg.warning { background: rgba(255,0,0,0.2); border-left: 3px solid #ff4444; color: #ffaaaa; }
+        .msg.info { background: rgba(0,255,255,0.08); border-left: 3px solid var(--neon-cyan); }
+        .msg.article { background: rgba(255,255,0,0.06); border-left: 3px solid var(--neon-yellow); }
         @keyframes msgPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         .chat-input { display: flex; padding: 15px; background: rgba(0,0,0,0.3); }
         .chat-input input { flex: 1; padding: 14px; border-radius: 30px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; outline: none; }
@@ -30,64 +32,134 @@
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
 </div></nav><div class="container">
     <div class="chat-container">
-        <div class="chat-header"><h2><i class="fas fa-robot"></i> AI 法律助手 · 风控模式</h2></div>
+        <div class="chat-header">
+            <h2><i class="fas fa-robot"></i> 法安智治 AI 法律助手</h2>
+            <p style="font-size:0.9rem; opacity:0.9;">内置风控检测与法律条文匹配 · 温暖陪伴</p >
+        </div>
         <div class="chat-body" id="chatBody">
-            <div class="msg bot">你好！我可以解答法律问题，并自动检测风险关键词。同时可以为你搜索相关法律条文。</div>
+            <div class="msg bot">
+                <strong>AI小安：</strong> 你好呀～ 我是你的贴心法律助手。遇到任何网络上的烦心事都可以告诉我，我会先帮你评估风险，然后查一查相关的法律条文，希望能帮到你 ❤️
+            </div>
         </div>
         <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="输入问题...">
+            <input type="text" id="chatInput" placeholder="描述你遇到的问题...">
             <button id="sendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
         </div>
     </div>
 </div>
-<script>
-    const body = document.getElementById('chatBody'), input = document.getElementById('chatInput'), send = document.getElementById('sendBtn');
-    // 风控关键词库
-    const riskWords = ['攻击', '黑客', '病毒', '恶意代码', '漏洞利用', '人肉', '开盒', '社工库'];
-    function addMsg(text, type, isWarning = false) {
-        const div = document.createElement('div');
-        div.className = 'msg ' + type;
-        if (isWarning) div.classList.add('warning');
-        div.innerHTML = text;
-        body.appendChild(div);
-        body.scrollTop = body.scrollHeight;
-    }
-    function checkRisk(text) {
-        const found = riskWords.filter(w => text.includes(w));
+<script>const body = document.getElementById('chatBody');
+const input = document.getElementById('chatInput');
+const send = document.getElementById('sendBtn');
+
+// 风控关键词库
+const riskDB = [
+    { words: ['攻击', '黑客', '病毒', '木马', '漏洞利用'], level: '危险', color: '#ff4444' },
+    { words: ['人肉', '开盒', '社工库', '隐私泄露'], level: '警告', color: '#ff8800' },
+    { words: ['自杀', '自残', '抑郁'], level: '注意', color: '#ffcc00' },
+    { words: ['诈骗', '骗钱', '转账'], level: '警告', color: '#ff8800' },
+    { words: ['谣言', '造谣', '传谣'], level: '注意', color: '#ffcc00' },
+    { words: ['网暴', '辱骂', '诽谤'], level: '注意', color: '#ffcc00' },
+];
+
+// 法律条文库
+const lawDB = [
+    { keys: ['谣言', '造谣', '传谣'], text: '《治安管理处罚法》第二十五条：散布谣言，谎报险情、疫情、警情或者以其他方法故意扰乱公共秩序的，处五日以上十日以下拘留，可以并处五百元以下罚款。' },
+    { keys: ['网暴', '辱骂', '诽谤', '人肉'], text: '《网络暴力信息治理规定》及《民法典》第一千零二十四条：禁止用侮辱、诽谤等方式侵害他人的名誉权。' },
+    { keys: ['诈骗', '骗钱', '电信诈骗'], text: '《刑法》第二百六十六条：诈骗公私财物，数额较大的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金。' },
+    { keys: ['隐私泄露', '个人信息'], text: '《个人信息保护法》第十条：任何组织、个人不得非法收集、使用、加工、传输他人个人信息。' },
+    { keys: ['自杀', '自残'], text: '请立即拨打心理援助热线：400-161-9995。你值得被关爱，这个世界需要你。' },
+    { keys: ['黑客', '攻击', '病毒'], text: '《刑法》第二百八十五条：非法侵入计算机信息系统，处三年以下有期徒刑或者拘役。' },
+];
+
+function addMsg(text, className = 'bot') {
+    const div = document.createElement('div');
+    div.className = `msg ${className}`;
+    div.innerHTML = text;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+}
+
+function analyzeRisk(inputText) {
+    let maxLevel = { level: '安全', color: '#00ff00', words: [] };
+    for (const rule of riskDB) {
+        const found = rule.words.filter(w => inputText.includes(w));
         if (found.length > 0) {
-            addMsg(`⚠️ 风控警告：检测到潜在风险词：${found.join('、')}，请勿用于非法用途。`, 'bot', true);
-            return true;
+            if (rule.level === '危险' || 
+               (rule.level === '警告' && maxLevel.level !== '危险') ||
+               (rule.level === '注意' && maxLevel.level !== '危险' && maxLevel.level !== '警告')) {
+                maxLevel = { level: rule.level, color: rule.color, words: found };
+            }
         }
-        return false;
     }
-    send.addEventListener('click', () => {
-        const msg = input.value.trim();
-        if (!msg) return;
-        addMsg(msg, 'user');
-        input.value = '';
-        const risky = checkRisk(msg);
+    return maxLevel;
+}
+
+function findLaw(inputText) {
+    let matched = [];
+    for (const item of lawDB) {
+        if (item.keys.some(k => inputText.includes(k))) {
+            matched.push(item.text);
+        }
+    }
+    if (matched.length === 0) {
+        matched.push('根据《民法典》及《网络安全法》，你的情况可依法维权。建议收集证据，通过平台调解功能处理。');
+    }
+    return matched;
+}send.addEventListener('click', () => {
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    // 显示用户消息
+    addMsg('<strong>你：</strong> ' + msg, 'user');
+    input.value = '';
+
+    // 1. 风控分析
+    const risk = analyzeRisk(msg);
+    let riskMsg = '';
+    if (risk.level === '安全') {
+        riskMsg = `✅ <strong>风控等级：安全</strong> —— 没有检测到明显风险，你的提问很友好。`;
+    } else {
+        riskMsg = `⚠️ <strong>风控等级：${risk.level}</strong> —— 检测到关键词：${risk.words.join('、')}`;
+        if (risk.level === '危险') {
+            riskMsg += '<br>🔴 你提到的内容可能涉及严重违法行为，请务必遵守法律，不要实施任何攻击行为。';
+        } else if (risk.level === '警告') {
+            riskMsg += '<br>🟠 请谨慎对待，如你正在遭遇此类困扰，法律会保护你。';
+        } else if (risk.level === '注意') {
+            riskMsg += '<br>🟡 我会帮你理清问题，别担心。';
+        }
+    }
+    addMsg(riskMsg, risk.level === '安全' ? 'info' : 'warning');
+
+    // 2. 法律条文检索
+    const laws = findLaw(msg);
+    setTimeout(() => {
+        addMsg(`<strong>AI小安：</strong> 我为你找到了以下相关法律依据，希望能帮到你：`, 'info');
+        laws.forEach((text, index) => {
+            setTimeout(() => {
+                addMsg(`📖 <strong>条文 ${index+1}：</strong>${text}`, 'article');
+            }, index * 400);
+        });
+
+        // 3. 温暖安慰
         setTimeout(() => {
-            let reply = '感谢咨询。';
-            if (msg.includes('谣言')) reply = '谣言举报：收集证据 → 平台提交 → 识别存证 → 交相关部门。';
-            else if (msg.includes('侵权')) reply = '网络侵权可在线提交，匹配调解员，全程免费。';
-            else reply = '已收到问题，建议参考相关法律法规。';
-            if (!risky) {
-                reply += ' 是否需要帮你搜索相关法律条文？回复“搜索”即可。';
-            }
-            addMsg(reply, 'bot');
-            // 自动构造搜索链接（用户回复“搜索”触发）
-            if (msg.includes('搜索')) {
-                const query = encodeURIComponent(msg.replace('搜索', '') + ' 法律条文');
-                setTimeout(() => {
-                    window.open(`https://www.baidu.com/s?wd=${query}`, '_blank');
-                    addMsg('已为你打开浏览器搜索相关法律条文。', 'bot');
-                }, 1000);
-            }
-        }, 800);
-    });
-    input.addEventListener('keypress', e => { if (e.key === 'Enter') send.click(); });
-    // 移动端菜单
-    document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('navLinks').classList.toggle('active'));
-</script>
+            const comforts = [
+                '无论遇到什么困难，你都不是一个人。法律会站在正义这边。',
+                '如果你现在感到无助，请相信一切都会好起来的。',
+                '别怕，我会一直在这里陪着你。有什么话都可以对我说。',
+                '你已经很勇敢了，愿意说出来就是第一步。',
+                '生活有时会下雨，但总会放晴的。',
+            ];
+            const randomComfort = comforts[Math.floor(Math.random() * comforts.length)];
+            addMsg(`<strong>AI小安：</strong> ${randomComfort} ❤️`, 'bot');
+        }, laws.length * 400 + 200);
+    }, 500);
+});
+
+input.addEventListener('keypress', e => { if (e.key === 'Enter') send.click(); });
+
+// 移动端菜单
+document.getElementById('menuToggle').addEventListener('click', () => {
+    document.getElementById('navLinks').classList.toggle('active');
+});</script></script>
 </body>
 </html>
