@@ -61,8 +61,19 @@ const riskDB = [
     { words: ['网暴','辱骂','诽谤','网络暴力','喷子','黑子'], level:'注意', desc:'网络暴力/诽谤' },
 ];
 
-// ============ 法律库（结构化回复模板） ============
+// ============ 法律库（新增借贷） ============
 const lawDB = [
+    {
+        keys:['借钱','借款','借给','欠款','还钱','借了','资金周转','微信转账','朋友借'],
+        conclusion:'仅凭微信聊天记录和转账凭证，可以起诉。但需要证明对方身份、借款合意、实际交付。你已具备关键证据。',
+        laws:[
+            {article:'《民法典》第六百七十九条',content:'自然人之间的借款合同，自贷款人提供借款时成立。'},
+            {article:'《民事诉讼法》第二十二条、第二十四条',content:'对公民提起的民事诉讼，由被告住所地人民法院管辖；合同纠纷也可由合同履行地法院管辖（接收货币一方所在地为合同履行地）。'}
+        ],
+        analysis:'有利事实：你有明确表达“借3.2万、年底还清”的聊天记录，以及微信转账凭证。不利事实：没有对方身份证号可能影响立案速度。信息缺口：如果你能提供对方身份证号或住址，将更方便确定管辖法院。',
+        solution:'1. 整理证据：将聊天记录导出并截图，含双方微信主页、借条内容、催款记录。2. 准备起诉材料：起诉状、你的身份证、对方身份信息、证据清单。3. 选择管辖法院：你作为接收货币方，可在兰州城关区人民法院起诉。4. 网上立案：微信小程序“人民法院在线服务”选择立案。',
+        risk:'诉讼时效：你已在2025年1月开始催款，时效中断，重新计算3年，目前未过时效。风险：对方若无财产，执行困难。本分析不构成正式法律意见。'
+    },
     {
         keys:['谣言','造谣','传谣'],
         conclusion:'如果你仅是转发未核实的信息，未造成严重后果，可能面临行政处罚；若故意编造虚假灾情、警情，则可能构成犯罪。',
@@ -159,7 +170,6 @@ const lawDB = [
     }
 ];
 
-// 通用回复
 const defaultLaw = {
     conclusion:'根据你描述的情况，可能涉及民事侵权或合同纠纷，建议进一步收集证据。',
     laws:[{article:'《民法典》相关条款',content:'民事主体从事民事活动，应当遵循诚信原则，不得违反法律，不得违背公序良俗。'}],
@@ -168,7 +178,7 @@ const defaultLaw = {
     risk:'注意诉讼时效为3年。AI分析仅供参考，不构成正式法律意见。'
 };
 
-// 工具：添加消息
+// ============ 工具函数 ============
 function addMsg(text, className = 'bot') {
     const div = document.createElement('div');
     div.className = `msg ${className}`;
@@ -177,7 +187,6 @@ function addMsg(text, className = 'bot') {
     body.scrollTop = body.scrollHeight;
 }
 
-// 工具：风控分析
 function analyzeRisk(text) {
     let result = { level:'安全', desc:'', words:[] };
     for (const rule of riskDB) {
@@ -193,14 +202,12 @@ function analyzeRisk(text) {
     return result;
 }
 
-// 工具：切割关键词
 function cutKeywords(text) {
     const cleaned = text.replace(/[，。？！、；：“”‘’（）【】《》\s]/g, ' ');
     const words = cleaned.split(' ').filter(w => w.length >= 2);
     return [...new Set(words)];
 }
 
-// 工具：匹配法律库条目
 function matchLaw(text) {
     const keywords = cutKeywords(text);
     let bestMatch = null;
@@ -218,18 +225,27 @@ function matchLaw(text) {
         }
     }
     return bestMatch || defaultLaw;
+}
+
+// 新增：智能检测用户是否已提供关键信息
+function checkInfoSufficiency(text) {
+    const hasAmount = /(\d+万|\d+元|\d+块|\d+\.?\d*万元|\d{4,})/.test(text);
+    const hasDate = /(\d{4}年|去年|前年|202[0-9]年|今年|半年|几天|周|月|\d+日|\d+号)/.test(text);
+    const hasPlace = /(省|市|区|县|兰州市|城关区|未央区|西安|兰州)/.test(text);
+    const hasEvidence = /(聊天记录|转账|微信|借条|合同|录音|截图|凭证|记录)/.test(text);
+    return { hasAmount, hasDate, hasPlace, hasEvidence, score: (hasAmount?1:0)+(hasDate?1:0)+(hasPlace?1:0)+(hasEvidence?1:0) };
 }send.addEventListener('click', () => {
     const msg = input.value.trim();
     if (!msg) return;
     addMsg('<strong>你：</strong> ' + msg, 'user');
     input.value = '';
 
-    // 风控先行（延迟）
+    // 风控检查
     setTimeout(() => {
         const risk = analyzeRisk(msg);
         let riskHtml = '';
         if (risk.level === '安全') {
-            riskHtml = '🤖 风控检测：未发现异常，可以继续。';
+            riskHtml = '🤖 风控检测：未发现异常，继续为你分析。';
         } else {
             const emoji = { '注意':'🟡', '警告':'🟠', '危险':'🔴' };
             riskHtml = `🤖 风控提醒：检测到关键词 <b>${risk.words.join('、')}</b>。风险等级：<span style="color:${risk.level==='危险'?'#ff4444':risk.level==='警告'?'#ff8800':'#ffcc00'}">${emoji[risk.level]} ${risk.level}</span> —— ${risk.desc}。`;
@@ -254,10 +270,22 @@ function matchLaw(text) {
             delay += 800;
         });
 
-        // 信息缺口追问
+        // 智能追问：只有当信息不全时才追问
         setTimeout(() => {
-            if (law !== defaultLaw) {
-                addMsg('🤔 为了更准确分析，请告诉我：事情发生的时间、地点、涉及金额、是否有合同/聊天记录等。', 'info');
+            const info = checkInfoSufficiency(msg);
+            if (info.score < 3) {
+                const missing = [];
+                if (!info.hasAmount) missing.push('涉及金额');
+                if (!info.hasDate) missing.push('发生时间');
+                if (!info.hasPlace) missing.push('所在地区');
+                if (!info.hasEvidence) missing.push('有哪些证据（聊天记录、转账凭证等）');
+                if (missing.length > 0) {
+                    addMsg(`🤔 为了给你更准确的建议，请补充以下信息：${missing.join('、')}。`, 'info');
+                } else {
+                    addMsg('💡 你提供的信息已经比较完整，按照上面的方案操作即可。如果还有细节需要确认，可以继续问我。', 'bot');
+                }
+            } else {
+                addMsg('💡 你提供的信息已经比较完整，按照上面的方案操作即可。如果还有细节需要确认，可以继续问我。', 'bot');
             }
         }, delay + 500);
     }, 300);
