@@ -51,32 +51,124 @@
 const input = document.getElementById('chatInput');
 const send = document.getElementById('sendBtn');
 
-// 风控关键词库
+// ============ 风控库 ============
 const riskDB = [
-    { words: ['攻击', '黑客', '病毒', '木马', '漏洞利用'], level: '危险', desc: '涉及网络攻击行为，可能触犯刑法' },
-    { words: ['人肉', '开盒', '社工库', '隐私泄露'], level: '警告', desc: '涉及非法获取或公开他人隐私' },
-    { words: ['自杀', '自残', '抑郁'], level: '注意', desc: '涉及人身安全，需要紧急心理援助' },
-    { words: ['诈骗', '骗钱', '转账'], level: '警告', desc: '可能涉及电信网络诈骗' },
-    { words: ['谣言', '造谣', '传谣'], level: '注意', desc: '散布虚假信息扰乱公共秩序' },
-    { words: ['网暴', '辱骂', '诽谤', '网络暴力'], level: '注意', desc: '侵害他人名誉权或人格尊严' },
+    { words: ['攻击','黑客','病毒','木马','漏洞利用','ddos','肉鸡'], level:'危险', desc:'涉及网络攻击' },
+    { words: ['人肉','开盒','社工库','隐私泄露','查开房','查信息'], level:'警告', desc:'非法获取/公开他人隐私' },
+    { words: ['自杀','自残','抑郁','不想活','跳楼','割腕'], level:'注意', desc:'人身安全高危' },
+    { words: ['诈骗','骗钱','转账','刷单','杀猪盘'], level:'警告', desc:'电信网络诈骗' },
+    { words: ['谣言','造谣','传谣','虚假信息','不实消息'], level:'注意', desc:'散布谣言' },
+    { words: ['网暴','辱骂','诽谤','网络暴力','喷子','黑子'], level:'注意', desc:'网络暴力/诽谤' },
 ];
 
-// 法律条文库（关键词 + 精确条文）
+// ============ 法律库（结构化回复模板） ============
 const lawDB = [
-    { keys: ['谣言', '造谣', '传谣'], article: '《治安管理处罚法》第二十五条', text: '散布谣言，谎报险情、疫情、警情或者以其他方法故意扰乱公共秩序的，处五日以上十日以下拘留，可以并处五百元以下罚款。' },
-    { keys: ['网暴', '辱骂', '诽谤', '网络暴力'], article: '《网络暴力信息治理规定》及《民法典》第一千零二十四条', text: '禁止用侮辱、诽谤等方式侵害他人的名誉权；网络暴力信息将依法处置。' },
-    { keys: ['诈骗', '骗钱', '电信诈骗'], article: '《刑法》第二百六十六条', text: '诈骗公私财物，数额较大的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金；数额巨大或者有其他严重情节的，处三年以上十年以下有期徒刑。' },
-    { keys: ['隐私泄露', '个人信息', '开盒', '人肉'], article: '《个人信息保护法》第十条及《刑法》第二百五十三条之一', text: '任何组织、个人不得非法收集、使用、加工、传输他人个人信息，不得非法买卖、提供或者公开他人个人信息；情节严重的，处三年以下有期徒刑或者拘役。' },
-    { keys: ['自杀', '自残'], article: '心理援助热线', text: '请立即拨打24小时心理援助热线：400-161-9995。你的生命非常宝贵，有很多人愿意帮助你。' },
-    { keys: ['黑客', '攻击', '病毒', '木马'], article: '《刑法》第二百八十五条', text: '非法侵入计算机信息系统，处三年以下有期徒刑或者拘役；情节特别严重的，处三年以上七年以下有期徒刑。' },
-    { keys: ['肖像权', '盗用照片'], article: '《民法典》第一千零一十九条', text: '任何组织或者个人不得以丑化、污损或者利用信息技术手段伪造等方式侵害他人的肖像权。未经肖像权人同意，不得制作、使用、公开肖像权人的肖像。' },
-    { keys: ['购物纠纷', '网购', '假货', '消费'], article: '《消费者权益保护法》第五十五条', text: '经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍。' },
-    { keys: ['校园贷', '学生贷', '高利贷'], article: '《关于进一步加强校园贷规范管理工作的通知》及《刑法》相关规定', text: '未经银行业监管部门批准设立的机构不得进入校园为大学生提供信贷服务；高利放贷涉嫌非法经营罪。' },
-    { keys: ['赌博', '网赌', '赌球'], article: '《刑法》第三百零三条', text: '以营利为目的，聚众赌博或者以赌博为业的，处三年以下有期徒刑、拘役或者管制，并处罚金；开设赌场的，处五年以下有期徒刑。' },
-    { keys: ['版权', '盗版', '抄袭', '知识产权'], article: '《著作权法》第四十八条', text: '未经著作权人许可，复制、发行、表演、放映、广播、汇编、通过信息网络向公众传播其作品的，应当承担停止侵害、消除影响、赔礼道歉、赔偿损失等民事责任。' },
+    {
+        keys:['谣言','造谣','传谣'],
+        conclusion:'如果你仅是转发未核实的信息，未造成严重后果，可能面临行政处罚；若故意编造虚假灾情、警情，则可能构成犯罪。',
+        laws:[
+            {article:'《治安管理处罚法》第二十五条',content:'散布谣言，谎报险情、疫情、警情或者以其他方法故意扰乱公共秩序的，处五日以上十日以下拘留，可以并处五百元以下罚款。'},
+            {article:'《刑法》第二百九十一条之一',content:'编造虚假的险情、疫情、灾情、警情，在信息网络或者其他媒体上传播，严重扰乱社会秩序的，处三年以下有期徒刑、拘役或者管制。'}
+        ],
+        analysis:'有利事实：如果你只是普通网民，并非首发且未获利，责任较轻。不利事实：若你明知是假仍转发，或造成社会恐慌，可能被追究。信息缺口：你转发的内容是否已证实为假？是否有人因此受损？',
+        solution:'1. 立即删除相关信息。2. 在相同平台发布澄清声明。3. 保留原始发布者信息以备调查。可向网信办举报源头。',
+        risk:'行政拘留风险（最多10天），若构成犯罪可判刑。注意网络信息转发也可能担责，不要转发未经核实的内容。'
+    },
+    {
+        keys:['网暴','辱骂','诽谤','网络暴力'],
+        conclusion:'他人在网络上对你进行侮辱、诽谤，你有权要求其停止侵害、恢复名誉、赔礼道歉，并主张精神损害赔偿。',
+        laws:[
+            {article:'《民法典》第一千零二十四条',content:'民事主体享有名誉权。任何组织或者个人不得以侮辱、诽谤等方式侵害他人的名誉权。'},
+            {article:'《治安管理处罚法》第四十二条',content:'写恐吓信或者以其他方法威胁他人人身安全，或者公然侮辱他人或者捏造事实诽谤他人的，处五日以下拘留或者五百元以下罚款。'}
+        ],
+        analysis:'有利事实：你有截图、录屏等证据。不利事实：若你也有互骂行为，可能被认定为双方过错。信息缺口：对方是否实名？攻击内容是否已扩散？',
+        solution:'1. 保存所有辱骂、诽谤的网页截图、录屏，包含时间。2. 向平台举报要求删帖封号。3. 向公安机关报案（携带证据）。4. 可向法院提起名誉权诉讼，要求赔偿。',
+        risk:'诉讼时效3年。若对方是匿名账号，需先向法院申请调查令向平台调取实名信息。AI分析不构成法律意见，建议咨询律师。'
+    },
+    {
+        keys:['诈骗','骗钱','转账','刷单','杀猪盘'],
+        conclusion:'如果你被骗取钱财，属于典型的电信网络诈骗，应立即报警并保留所有证据，追回可能性与破案速度有关。',
+        laws:[
+            {article:'《刑法》第二百六十六条',content:'诈骗公私财物，数额较大的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金；数额巨大或者有其他严重情节的，处三年以上十年以下有期徒刑。'}
+        ],
+        analysis:'有利事实：你保留了聊天记录、转账凭证。不利事实：若你无法提供对方准确信息，侦破难度大。信息缺口：被骗金额？是否知道对方银行卡号或账号？',
+        solution:'1. 立即拨打96110反诈专线并前往派出所报案。2. 提供所有聊天记录、转账记录、对方账号。3. 冻结对方账户（警方操作）。4. 后续可提起附带民事诉讼。',
+        risk:'诈骗资金往往被快速转移，追回难度大。务必尽快报警，抓住“黄金半小时”。'
+    },
+    {
+        keys:['肖像权','盗用照片','照片被盗'],
+        conclusion:'未经你允许使用你的照片（尤其是用于营利或丑化），构成侵犯肖像权，你可以要求停止侵害并索赔。',
+        laws:[
+            {article:'《民法典》第一千零一十九条',content:'任何组织或者个人不得以丑化、污损或者利用信息技术手段伪造等方式侵害他人的肖像权。未经肖像权人同意，不得制作、使用、公开肖像权人的肖像。'}
+        ],
+        analysis:'有利事实：你能证明照片是你本人，且有对方使用的证据。不利事实：若对方只是普通分享未营利，赔偿可能较少。信息缺口：对方是否用于商业用途？是否给你造成损失？',
+        solution:'1. 截图保存对方使用你照片的页面。2. 发函或联系对方要求删除并道歉。3. 向平台投诉。4. 若对方拒绝，可向法院起诉要求赔礼道歉、赔偿损失。',
+        risk:'诉讼时效3年。若对方是境外用户，维权难度大。'
+    },
+    {
+        keys:['网购','假货','消费','退货'],
+        conclusion:'如果你买到假货或质量不符的商品，有权要求退货退款并主张三倍赔偿（欺诈情形下）。',
+        laws:[
+            {article:'《消费者权益保护法》第五十五条',content:'经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍。'}
+        ],
+        analysis:'有利事实：你有订单截图、支付记录、商品照片。不利事实：若超过7天无理由退货期限，需证明质量缺陷。信息缺口：购买时间？是否与卖家沟通？',
+        solution:'1. 联系商家要求退一赔三。2. 向电商平台投诉举报。3. 拨打12315向市场监管局投诉。4. 必要时起诉（金额大可找律师）。',
+        risk:'注意诉讼时效3年。需保留商品实物和包装。若商家跑路，可要求平台披露商家信息。'
+    },
+    {
+        keys:['校园贷','学生贷','高利贷'],
+        conclusion:'非法校园贷（如高利贷、套路贷）属于违法行为，超出法定利率的部分不受保护，暴力催收可报警。',
+        laws:[
+            {article:'《关于进一步加强校园贷规范管理工作的通知》',content:'未经银行业监管部门批准设立的机构不得进入校园为大学生提供信贷服务。'},
+            {article:'《刑法》及相关司法解释',content:'以非法占有为目的，诱使或迫使被害人签订“借贷”协议，实施诈骗、敲诈勒索等行为，构成犯罪。'}
+        ],
+        analysis:'有利事实：你可能是被套路贷威胁的学生。不利事实：若你已借款，本金仍需偿还，但可拒绝超高利息。信息缺口：借款金额、利息、是否被威胁？',
+        solution:'1. 停止继续借款。2. 保留借款合同、聊天记录、威胁证据。3. 向学校保卫处或辅导员求助。4. 向公安机关报案（套路贷）。5. 与家人沟通。',
+        risk:'千万不要拆东墙补西墙。套路贷可能引发严重人身威胁，务必报警。正常借贷纠纷属于民事，年利率超过LPR4倍的部分无效。'
+    },
+    {
+        keys:['赌博','网赌','赌球'],
+        conclusion:'网络赌博本身违法，参与赌博可能被治安处罚；若以赌博为业或开设赌场，构成犯罪。',
+        laws:[
+            {article:'《刑法》第三百零三条',content:'以营利为目的，聚众赌博或者以赌博为业的，处三年以下有期徒刑、拘役或者管制，并处罚金；开设赌场的，处五年以下有期徒刑。'}
+        ],
+        analysis:'有利事实：若你只是偶尔参与，可能仅受治安处罚。不利事实：若你拉人参与或担任代理，可能涉嫌开设赌场。信息缺口：你是否组织他人赌博？',
+        solution:'1. 立即停止参与。2. 可以向公安机关举报赌博平台。3. 若已输掉大额资金，报警可能追回部分款项（赌资应予追缴）。',
+        risk:'参与赌博的资金不受法律保护，追回困难。戒赌才是根本，可寻求心理帮助。'
+    },
+    {
+        keys:['版权','盗版','抄袭','知识产权'],
+        conclusion:'他人未经许可使用你的原创作品，构成著作权侵权，你有权要求停止侵权、消除影响、赔偿损失。',
+        laws:[
+            {article:'《著作权法》第四十八条',content:'未经著作权人许可，复制、发行、表演、放映、广播、汇编、通过信息网络向公众传播其作品的，应当承担停止侵害、消除影响、赔礼道歉、赔偿损失等民事责任。'}
+        ],
+        analysis:'有利事实：你有作品底稿、发表记录。不利事实：若无法证明你是著作权人，维权难度大。信息缺口：作品是否登记？侵权是否造成经济损失？',
+        solution:'1. 保存侵权链接和截图。2. 向平台投诉要求删除。3. 发函要求侵权方赔礼道歉。4. 可向法院起诉，请求赔偿。',
+        risk:'诉讼时效3年。赔偿金额一般按实际损失或侵权人违法所得计算，举证较难。'
+    },
+    {
+        keys:['隐私泄露','个人信息','开盒','人肉'],
+        conclusion:'他人非法获取、公开你的个人信息，属于严重侵权行为，可报警并追究其刑事及民事责任。',
+        laws:[
+            {article:'《个人信息保护法》第十条',content:'任何组织、个人不得非法收集、使用、加工、传输他人个人信息，不得非法买卖、提供或者公开他人个人信息。'},
+            {article:'《刑法》第二百五十三条之一',content:'侵犯公民个人信息罪，情节严重的，处三年以下有期徒刑或者拘役，并处或者单处罚金。'}
+        ],
+        analysis:'有利事实：你发现被泄露信息的具体内容。不利事实：若找不到泄露源头，维权难度稍大。信息缺口：是否知道谁泄露的？是否因此遭受骚扰？',
+        solution:'1. 保留被公开信息的截图。2. 向公安机关报案（侵犯公民个人信息）。3. 向网信办举报。4. 可提起民事诉讼索赔。',
+        risk:'报警越早越好，防止信息进一步扩散。若造成严重后果，可要求精神损害赔偿。'
+    }
 ];
 
-// 工具：添加消息到聊天窗
+// 通用回复
+const defaultLaw = {
+    conclusion:'根据你描述的情况，可能涉及民事侵权或合同纠纷，建议进一步收集证据。',
+    laws:[{article:'《民法典》相关条款',content:'民事主体从事民事活动，应当遵循诚信原则，不得违反法律，不得违背公序良俗。'}],
+    analysis:'目前信息不足以准确定性，需要更多细节才能分析有利/不利因素。',
+    solution:'1. 收集所有相关聊天记录、合同、支付凭证。2. 尝试与对方协商。3. 向相关监管部门投诉。4. 咨询律师决定是否起诉。',
+    risk:'注意诉讼时效为3年。AI分析仅供参考，不构成正式法律意见。'
+};
+
+// 工具：添加消息
 function addMsg(text, className = 'bot') {
     const div = document.createElement('div');
     div.className = `msg ${className}`;
@@ -85,117 +177,93 @@ function addMsg(text, className = 'bot') {
     body.scrollTop = body.scrollHeight;
 }
 
-// 工具：切割用户输入为有效关键词（去掉常见停用词）
-function cutKeywords(inputText) {
-    const stopWords = ['我', '的', '了', '是', '在', '有', '被', '把', '和', '与', '吗', '呢', '吧', '啊', '什么', '怎么', '为什么', '如何', '一个', '这个', '那个', '他们', '我们', '你', '他', '她', '它'];
-    // 先去掉标点，再拆分
-    const cleaned = inputText.replace(/[，。？！、；：”“‘’（）【】《》\s.,?!;:""''\[\]()<>]/g, ' ');
-    const words = cleaned.split(' ').filter(w => w.length > 1 && !stopWords.includes(w));
-    // 同时也保留原始输入中的多字词作为补充
-    const extraWords = [];
-    for (let i = 0; i < inputText.length - 1; i++) {
-        const twoChar = inputText.substring(i, i + 2);
-        if (!stopWords.includes(twoChar) && twoChar.match(/[\u4e00-\u9fa5]{2}/)) {
-            extraWords.push(twoChar);
-        }
-    }
-    return [...new Set([...words, ...extraWords])];
-}
-
-// 工具：基于切割词匹配法律条文
-function findLaws(inputText) {
-    const keywords = cutKeywords(inputText);
-    const matched = [];
-    const usedIds = new Set();
-    for (const word of keywords) {
-        for (let i = 0; i < lawDB.length; i++) {
-            if (usedIds.has(i)) continue;
-            const item = lawDB[i];
-            if (item.keys.some(k => word.includes(k) || k.includes(word))) {
-                matched.push(item);
-                usedIds.add(i);
-            }
-        }
-    }
-    if (matched.length === 0) {
-        matched.push({
-            article: '《网络安全法》第十二条',
-            text: '任何个人和组织使用网络应当遵守宪法法律，不得利用网络从事危害网络安全、荣誉和利益等活动。同时，您可收集证据通过平台调解功能维权。'
-        });
-    }
-    return matched;
-}
-
 // 工具：风控分析
-function analyzeRisk(inputText) {
-    let result = { level: '安全', desc: '未检测到明显风险', words: [] };
+function analyzeRisk(text) {
+    let result = { level:'安全', desc:'', words:[] };
     for (const rule of riskDB) {
-        const found = rule.words.filter(w => inputText.includes(w));
+        const found = rule.words.filter(w => text.includes(w));
         if (found.length > 0) {
-            if (rule.level === '危险' || 
+            if (rule.level === '危险' ||
                (rule.level === '警告' && result.level !== '危险') ||
                (rule.level === '注意' && result.level !== '危险' && result.level !== '警告')) {
-                result = { level: rule.level, desc: rule.desc, words: found };
+                result = { level:rule.level, desc:rule.desc, words:found };
             }
         }
     }
     return result;
+}
+
+// 工具：切割关键词
+function cutKeywords(text) {
+    const cleaned = text.replace(/[，。？！、；：“”‘’（）【】《》\s]/g, ' ');
+    const words = cleaned.split(' ').filter(w => w.length >= 2);
+    return [...new Set(words)];
+}
+
+// 工具：匹配法律库条目
+function matchLaw(text) {
+    const keywords = cutKeywords(text);
+    let bestMatch = null;
+    let maxHits = 0;
+    for (const item of lawDB) {
+        let hits = 0;
+        for (const key of item.keys) {
+            if (keywords.some(w => w.includes(key) || key.includes(w))) {
+                hits++;
+            }
+        }
+        if (hits > maxHits) {
+            maxHits = hits;
+            bestMatch = item;
+        }
+    }
+    return bestMatch || defaultLaw;
 }send.addEventListener('click', () => {
     const msg = input.value.trim();
     if (!msg) return;
-
-    // 用户消息
     addMsg('<strong>你：</strong> ' + msg, 'user');
     input.value = '';
 
-    // 1. 风控分析（模拟思考延迟）
+    // 风控先行（延迟）
     setTimeout(() => {
         const risk = analyzeRisk(msg);
         let riskHtml = '';
         if (risk.level === '安全') {
-            riskHtml = '🤖 我仔细看了你的问题，没有发现违规风险，可以继续。';
+            riskHtml = '🤖 风控检测：未发现异常，可以继续。';
         } else {
-            const emoji = { '注意': '🟡', '警告': '🟠', '危险': '🔴' };
-            riskHtml = `🤖 风控提醒：检测到关键词 <b>${risk.words.join('、')}</b>。<span style="color:${risk.level==='危险'?'#ff4444':risk.level==='警告'?'#ff8800':'#ffcc00'}">${emoji[risk.level]} ${risk.level}</span> —— ${risk.desc}。`;
+            const emoji = { '注意':'🟡', '警告':'🟠', '危险':'🔴' };
+            riskHtml = `🤖 风控提醒：检测到关键词 <b>${risk.words.join('、')}</b>。风险等级：<span style="color:${risk.level==='危险'?'#ff4444':risk.level==='警告'?'#ff8800':'#ffcc00'}">${emoji[risk.level]} ${risk.level}</span> —— ${risk.desc}。`;
         }
-        addMsg(riskHtml, 'info');
+        addMsg(riskHtml, 'warning');
 
-        // 2. 词语切割与法律检索
-        const keywords = cutKeywords(msg);
-        const laws = findLaws(msg);
-        
-        setTimeout(() => {
-            addMsg(`📚 根据你提到的<b>“${keywords.slice(0,3).join('、')}”</b>等关键词，我帮你查到以下规定：`, 'info');
-            
-            laws.forEach((law, index) => {
-                setTimeout(() => {
-                    addMsg(
-                        `<div style="font-weight:bold;margin-bottom:4px;">📖 ${law.article}</div>
-                         <div style="color:#e0e0e0;">${law.text}</div>`,
-                        'article'
-                    );
-                }, index * 500);
-            });
+        // 匹配法律
+        const law = matchLaw(msg);
+        const steps = [
+            { title:'结论先行', content:law.conclusion, cls:'info' },
+            { title:'法律依据', content: law.laws.map(l => `<b>${l.article}</b><br>${l.content}`).join('<br><br>'), cls:'article' },
+            { title:'案情分析', content:law.analysis, cls:'info' },
+            { title:'实操方案', content:law.solution, cls:'article' },
+            { title:'风险提示', content:law.risk + '<br><small>⚠️ 本回复为AI知识库匹配，不构成律师正式法律意见，复杂案件请咨询当地律师。</small>', cls:'info' }
+        ];
 
-            // 3. 温暖结尾
-            const totalDelay = laws.length * 500 + 300;
+        let delay = 0;
+        steps.forEach((step) => {
             setTimeout(() => {
-                const comforts = [
-                    '以上是相关的法律依据，希望能帮到你。',
-                    '如果还有疑问，可以继续问我，我随时都在。',
-                    '法律是我们维护权益的最强武器，别害怕使用它。',
-                    '记得保存好相关证据，后面如果需要调解，我可以协助你。'
-                ];
-                const comfort = comforts[Math.floor(Math.random() * comforts.length)];
-                addMsg(`<strong>AI小安：</strong> ${comfort} ❤️`, 'bot');
-            }, totalDelay);
-        }, 300);
-    }, 200);
+                addMsg(`<div style="font-weight:bold;margin-bottom:6px;">📌 ${step.title}</div>${step.content}`, step.cls);
+            }, delay);
+            delay += 800;
+        });
+
+        // 信息缺口追问
+        setTimeout(() => {
+            if (law !== defaultLaw) {
+                addMsg('🤔 为了更准确分析，请告诉我：事情发生的时间、地点、涉及金额、是否有合同/聊天记录等。', 'info');
+            }
+        }, delay + 500);
+    }, 300);
 });
 
 input.addEventListener('keypress', e => { if (e.key === 'Enter') send.click(); });
-
-// 移动端菜单
 document.getElementById('menuToggle').addEventListener('click', () => {
     document.getElementById('navLinks').classList.toggle('active');
 });</script></script>
