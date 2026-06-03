@@ -21,8 +21,8 @@
 - 周期：2026 - 2029
 
 ## 页面结构
-- `welcome.html` 欢迎页
-- `index.html` 主页（滚动帧）
+- `index.html` 欢迎页
+- `home.html` 主页（滚动帧）
 - `team.html` 团队介绍
 - `plan.html` 实施规划
 - `chat.html` AI 智能咨询
