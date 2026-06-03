@@ -8,25 +8,60 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center;
-            background:linear-gradient(135deg,#0a0f1e 0%,#1a1f3a 30%,#2a1f3a 60%,#1a2f3a 100%);
-            animation:bgShift 12s infinite alternate;}
-        @keyframes bgShift{0%{background-position:0% 50%;}100%{background-position:100% 50%;}}
-        .welcome-container{text-align:center;color:white;animation:fadeInUp 1.2s ease-out;}
-        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
-        .welcome-logo{font-size:5rem;font-weight:800;background:linear-gradient(135deg,#4b9eff,#d06eff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:20px;}
-        .welcome-sub{font-size:1.8rem;font-weight:300;margin-bottom:50px;opacity:0.9;}
-        .btn-enter{display:inline-block;padding:18px 50px;border-radius:80px;background:linear-gradient(145deg,#ff7b5a,#ff6b9d);color:white;font-size:1.4rem;font-weight:700;text-decoration:none;box-shadow:0 10px 30px rgba(255,107,157,0.4);transition:all 0.3s;cursor:pointer;animation:pulse 2s infinite;}
-        .btn-enter:hover{transform:scale(1.08);box-shadow:0 15px 40px rgba(255,107,157,0.6);}
+        body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;background:#0a0f1e;}
+        canvas{position:fixed;top:0;left:0;z-index:0;}
+        .welcome-container{position:relative;z-index:1;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;}
+        .title{font-size:5rem;font-weight:800;background:linear-gradient(135deg,#4b9eff,#d06eff);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:20px;opacity:0;animation:titleIn 1.5s ease forwards;}
+        @keyframes titleIn{0%{opacity:0;transform:translateY(-30px);}100%{opacity:1;transform:translateY(0);}}
+        .subtitle{font-size:1.8rem;font-weight:300;margin-bottom:50px;opacity:0;animation:fadeIn 1.5s 0.8s forwards;}
+        @keyframes fadeIn{to{opacity:1;}}
+        .btn-enter{display:inline-block;padding:18px 50px;border-radius:80px;background:linear-gradient(145deg,#ff7b5a,#ff6b9d);color:white;font-size:1.4rem;font-weight:700;text-decoration:none;box-shadow:0 10px 30px rgba(255,107,157,0.4);transition:all 0.3s;cursor:pointer;animation:pulse 2s infinite;opacity:0;animation:btnIn 0.8s 1.6s forwards, pulse 2s infinite;}
+        @keyframes btnIn{to{opacity:1;}}
         @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,107,157,0.5);}70%{box-shadow:0 0 0 20px rgba(255,107,157,0);}100%{box-shadow:0 0 0 0 rgba(255,107,157,0);}}
     </style>
 </head>
 <body>
-    <div class="welcome-container">
-        <div class="welcome-logo">法安智治</div>
-        <div class="welcome-sub">多模态·市域网络风险监测与调解一体化</div>
-        <!-- 跳转 home.html -->
-        <a href=" " class="btn-enter">✨ 欢迎进入</a >
-    </div>
+<canvas id="particleCanvas"></canvas><div class="welcome-container">
+    <div class="title">法安智治</div>
+    <div class="subtitle">多模态·市域网络风险监测与调解一体化</div>
+    <button onclick="location.href='home.html'" class="btn-enter">✨ 欢迎进入</button>
+</div>
+<script>
+    // 粒子背景
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const particles = [];
+    for(let i=0;i<100;i++){
+        particles.push({
+            x:Math.random()*canvas.width,
+            y:Math.random()*canvas.height,
+            radius:Math.random()*3+1,
+            speedX:Math.random()*0.5-0.25,
+            speedY:Math.random()*0.5-0.25
+        });
+    }
+    function animate(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle='white';
+        particles.forEach(p=>{
+            p.x+=p.speedX;
+            p.y+=p.speedY;
+            if(p.x<0||p.x>canvas.width)p.speedX*=-1;
+            if(p.y<0||p.y>canvas.height)p.speedY*=-1;
+            ctx.beginPath();
+            ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+            ctx.fillStyle='rgba(255,255,255,0.8)';
+            ctx.fill();
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+    window.addEventListener('resize',()=>{
+        canvas.width=window.innerWidth;
+        canvas.height=window.innerHeight;
+    });
+</script>
 </body>
 </html>
