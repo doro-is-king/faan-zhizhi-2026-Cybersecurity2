@@ -51,7 +51,7 @@
 const input = document.getElementById('chatInput');
 const send = document.getElementById('sendBtn');
 
-// 风控关键词库（附带人性化解释）
+// 风控关键词库
 const riskDB = [
     { words: ['攻击', '黑客', '病毒', '木马', '漏洞利用'], level: '危险', desc: '涉及网络攻击行为，可能触犯刑法' },
     { words: ['人肉', '开盒', '社工库', '隐私泄露'], level: '警告', desc: '涉及非法获取或公开他人隐私' },
@@ -70,9 +70,13 @@ const lawDB = [
     { keys: ['自杀', '自残'], article: '心理援助热线', text: '请立即拨打24小时心理援助热线：400-161-9995。你的生命非常宝贵，有很多人愿意帮助你。' },
     { keys: ['黑客', '攻击', '病毒', '木马'], article: '《刑法》第二百八十五条', text: '非法侵入计算机信息系统，处三年以下有期徒刑或者拘役；情节特别严重的，处三年以上七年以下有期徒刑。' },
     { keys: ['肖像权', '盗用照片'], article: '《民法典》第一千零一十九条', text: '任何组织或者个人不得以丑化、污损或者利用信息技术手段伪造等方式侵害他人的肖像权。未经肖像权人同意，不得制作、使用、公开肖像权人的肖像。' },
-    { keys: ['购物纠纷', '网购', '假货'], article: '《消费者权益保护法》第五十五条', text: '经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍。' },
+    { keys: ['购物纠纷', '网购', '假货', '消费'], article: '《消费者权益保护法》第五十五条', text: '经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍。' },
+    { keys: ['校园贷', '学生贷', '高利贷'], article: '《关于进一步加强校园贷规范管理工作的通知》及《刑法》相关规定', text: '未经银行业监管部门批准设立的机构不得进入校园为大学生提供信贷服务；高利放贷涉嫌非法经营罪。' },
+    { keys: ['赌博', '网赌', '赌球'], article: '《刑法》第三百零三条', text: '以营利为目的，聚众赌博或者以赌博为业的，处三年以下有期徒刑、拘役或者管制，并处罚金；开设赌场的，处五年以下有期徒刑。' },
+    { keys: ['版权', '盗版', '抄袭', '知识产权'], article: '《著作权法》第四十八条', text: '未经著作权人许可，复制、发行、表演、放映、广播、汇编、通过信息网络向公众传播其作品的，应当承担停止侵害、消除影响、赔礼道歉、赔偿损失等民事责任。' },
 ];
 
+// 工具：添加消息到聊天窗
 function addMsg(text, className = 'bot') {
     const div = document.createElement('div');
     div.className = `msg ${className}`;
@@ -81,6 +85,48 @@ function addMsg(text, className = 'bot') {
     body.scrollTop = body.scrollHeight;
 }
 
+// 工具：切割用户输入为有效关键词（去掉常见停用词）
+function cutKeywords(inputText) {
+    const stopWords = ['我', '的', '了', '是', '在', '有', '被', '把', '和', '与', '吗', '呢', '吧', '啊', '什么', '怎么', '为什么', '如何', '一个', '这个', '那个', '他们', '我们', '你', '他', '她', '它'];
+    // 先去掉标点，再拆分
+    const cleaned = inputText.replace(/[，。？！、；：”“‘’（）【】《》\s.,?!;:""''\[\]()<>]/g, ' ');
+    const words = cleaned.split(' ').filter(w => w.length > 1 && !stopWords.includes(w));
+    // 同时也保留原始输入中的多字词作为补充
+    const extraWords = [];
+    for (let i = 0; i < inputText.length - 1; i++) {
+        const twoChar = inputText.substring(i, i + 2);
+        if (!stopWords.includes(twoChar) && twoChar.match(/[\u4e00-\u9fa5]{2}/)) {
+            extraWords.push(twoChar);
+        }
+    }
+    return [...new Set([...words, ...extraWords])];
+}
+
+// 工具：基于切割词匹配法律条文
+function findLaws(inputText) {
+    const keywords = cutKeywords(inputText);
+    const matched = [];
+    const usedIds = new Set();
+    for (const word of keywords) {
+        for (let i = 0; i < lawDB.length; i++) {
+            if (usedIds.has(i)) continue;
+            const item = lawDB[i];
+            if (item.keys.some(k => word.includes(k) || k.includes(word))) {
+                matched.push(item);
+                usedIds.add(i);
+            }
+        }
+    }
+    if (matched.length === 0) {
+        matched.push({
+            article: '《网络安全法》第十二条',
+            text: '任何个人和组织使用网络应当遵守宪法法律，不得利用网络从事危害网络安全、荣誉和利益等活动。同时，您可收集证据通过平台调解功能维权。'
+        });
+    }
+    return matched;
+}
+
+// 工具：风控分析
 function analyzeRisk(inputText) {
     let result = { level: '安全', desc: '未检测到明显风险', words: [] };
     for (const rule of riskDB) {
@@ -94,23 +140,6 @@ function analyzeRisk(inputText) {
         }
     }
     return result;
-}
-
-function findLaws(inputText) {
-    const matched = [];
-    for (const item of lawDB) {
-        if (item.keys.some(k => inputText.includes(k))) {
-            matched.push(item);
-        }
-    }
-    // 如果没有匹配，返回通用指引
-    if (matched.length === 0) {
-        matched.push({
-            article: '《网络安全法》第十二条',
-            text: '任何个人和组织使用网络应当遵守宪法法律，不得利用网络从事危害网络安全、荣誉和利益等活动。同时，您可收集证据通过平台调解功能维权。'
-        });
-    }
-    return matched;
 }send.addEventListener('click', () => {
     const msg = input.value.trim();
     if (!msg) return;
@@ -119,23 +148,25 @@ function findLaws(inputText) {
     addMsg('<strong>你：</strong> ' + msg, 'user');
     input.value = '';
 
-    // 1. 风控分析（延迟200ms，更像思考）
+    // 1. 风控分析（模拟思考延迟）
     setTimeout(() => {
         const risk = analyzeRisk(msg);
         let riskHtml = '';
         if (risk.level === '安全') {
-            riskHtml = '🤖 我先帮你看了看，没有发现明显的风险词，很安全。';
+            riskHtml = '🤖 我仔细看了你的问题，没有发现违规风险，可以继续。';
         } else {
             const emoji = { '注意': '🟡', '警告': '🟠', '危险': '🔴' };
-            riskHtml = `🤖 稍等，我检测到一些需要留意的关键词：<b>${risk.words.join('、')}</b>。风险等级：<span style="color:${risk.level==='危险'?'#ff4444':risk.level==='警告'?'#ff8800':'#ffcc00'}">${emoji[risk.level]} ${risk.level}</span> —— ${risk.desc}。`;
+            riskHtml = `🤖 风控提醒：检测到关键词 <b>${risk.words.join('、')}</b>。<span style="color:${risk.level==='危险'?'#ff4444':risk.level==='警告'?'#ff8800':'#ffcc00'}">${emoji[risk.level]} ${risk.level}</span> —— ${risk.desc}。`;
         }
         addMsg(riskHtml, 'info');
 
-        // 2. 法律条文检索（再延迟300ms，逐步给出）
+        // 2. 词语切割与法律检索
+        const keywords = cutKeywords(msg);
+        const laws = findLaws(msg);
+        
         setTimeout(() => {
-            const laws = findLaws(msg);
-            addMsg('📚 根据你提到的情况，我帮你查到了以下规定：', 'info');
-
+            addMsg(`📚 根据你提到的<b>“${keywords.slice(0,3).join('、')}”</b>等关键词，我帮你查到以下规定：`, 'info');
+            
             laws.forEach((law, index) => {
                 setTimeout(() => {
                     addMsg(
@@ -146,15 +177,14 @@ function findLaws(inputText) {
                 }, index * 500);
             });
 
-            // 3. 温暖结尾（最后再延迟一会）
+            // 3. 温暖结尾
             const totalDelay = laws.length * 500 + 300;
             setTimeout(() => {
                 const comforts = [
-                    '不用太担心，法律会保护每一个守法的公民。',
-                    '遇到纠纷不要急，我们一步一步来。',
-                    '你愿意说出来已经很勇敢了，剩下的交给我。',
-                    '记住，你不是一个人在面对这些事情。',
-                    '有任何问题随时可以再来找我，我一直都在。'
+                    '以上是相关的法律依据，希望能帮到你。',
+                    '如果还有疑问，可以继续问我，我随时都在。',
+                    '法律是我们维护权益的最强武器，别害怕使用它。',
+                    '记得保存好相关证据，后面如果需要调解，我可以协助你。'
                 ];
                 const comfort = comforts[Math.floor(Math.random() * comforts.length)];
                 addMsg(`<strong>AI小安：</strong> ${comfort} ❤️`, 'bot');
