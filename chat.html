@@ -51,24 +51,26 @@
 const input = document.getElementById('chatInput');
 const send = document.getElementById('sendBtn');
 
-// 风控关键词库
+// 风控关键词库（附带人性化解释）
 const riskDB = [
-    { words: ['攻击', '黑客', '病毒', '木马', '漏洞利用'], level: '危险', color: '#ff4444' },
-    { words: ['人肉', '开盒', '社工库', '隐私泄露'], level: '警告', color: '#ff8800' },
-    { words: ['自杀', '自残', '抑郁'], level: '注意', color: '#ffcc00' },
-    { words: ['诈骗', '骗钱', '转账'], level: '警告', color: '#ff8800' },
-    { words: ['谣言', '造谣', '传谣'], level: '注意', color: '#ffcc00' },
-    { words: ['网暴', '辱骂', '诽谤'], level: '注意', color: '#ffcc00' },
+    { words: ['攻击', '黑客', '病毒', '木马', '漏洞利用'], level: '危险', desc: '涉及网络攻击行为，可能触犯刑法' },
+    { words: ['人肉', '开盒', '社工库', '隐私泄露'], level: '警告', desc: '涉及非法获取或公开他人隐私' },
+    { words: ['自杀', '自残', '抑郁'], level: '注意', desc: '涉及人身安全，需要紧急心理援助' },
+    { words: ['诈骗', '骗钱', '转账'], level: '警告', desc: '可能涉及电信网络诈骗' },
+    { words: ['谣言', '造谣', '传谣'], level: '注意', desc: '散布虚假信息扰乱公共秩序' },
+    { words: ['网暴', '辱骂', '诽谤', '网络暴力'], level: '注意', desc: '侵害他人名誉权或人格尊严' },
 ];
 
-// 法律条文库
+// 法律条文库（关键词 + 精确条文）
 const lawDB = [
-    { keys: ['谣言', '造谣', '传谣'], text: '《治安管理处罚法》第二十五条：散布谣言，谎报险情、疫情、警情或者以其他方法故意扰乱公共秩序的，处五日以上十日以下拘留，可以并处五百元以下罚款。' },
-    { keys: ['网暴', '辱骂', '诽谤', '人肉'], text: '《网络暴力信息治理规定》及《民法典》第一千零二十四条：禁止用侮辱、诽谤等方式侵害他人的名誉权。' },
-    { keys: ['诈骗', '骗钱', '电信诈骗'], text: '《刑法》第二百六十六条：诈骗公私财物，数额较大的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金。' },
-    { keys: ['隐私泄露', '个人信息'], text: '《个人信息保护法》第十条：任何组织、个人不得非法收集、使用、加工、传输他人个人信息。' },
-    { keys: ['自杀', '自残'], text: '请立即拨打心理援助热线：400-161-9995。你值得被关爱，这个世界需要你。' },
-    { keys: ['黑客', '攻击', '病毒'], text: '《刑法》第二百八十五条：非法侵入计算机信息系统，处三年以下有期徒刑或者拘役。' },
+    { keys: ['谣言', '造谣', '传谣'], article: '《治安管理处罚法》第二十五条', text: '散布谣言，谎报险情、疫情、警情或者以其他方法故意扰乱公共秩序的，处五日以上十日以下拘留，可以并处五百元以下罚款。' },
+    { keys: ['网暴', '辱骂', '诽谤', '网络暴力'], article: '《网络暴力信息治理规定》及《民法典》第一千零二十四条', text: '禁止用侮辱、诽谤等方式侵害他人的名誉权；网络暴力信息将依法处置。' },
+    { keys: ['诈骗', '骗钱', '电信诈骗'], article: '《刑法》第二百六十六条', text: '诈骗公私财物，数额较大的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金；数额巨大或者有其他严重情节的，处三年以上十年以下有期徒刑。' },
+    { keys: ['隐私泄露', '个人信息', '开盒', '人肉'], article: '《个人信息保护法》第十条及《刑法》第二百五十三条之一', text: '任何组织、个人不得非法收集、使用、加工、传输他人个人信息，不得非法买卖、提供或者公开他人个人信息；情节严重的，处三年以下有期徒刑或者拘役。' },
+    { keys: ['自杀', '自残'], article: '心理援助热线', text: '请立即拨打24小时心理援助热线：400-161-9995。你的生命非常宝贵，有很多人愿意帮助你。' },
+    { keys: ['黑客', '攻击', '病毒', '木马'], article: '《刑法》第二百八十五条', text: '非法侵入计算机信息系统，处三年以下有期徒刑或者拘役；情节特别严重的，处三年以上七年以下有期徒刑。' },
+    { keys: ['肖像权', '盗用照片'], article: '《民法典》第一千零一十九条', text: '任何组织或者个人不得以丑化、污损或者利用信息技术手段伪造等方式侵害他人的肖像权。未经肖像权人同意，不得制作、使用、公开肖像权人的肖像。' },
+    { keys: ['购物纠纷', '网购', '假货'], article: '《消费者权益保护法》第五十五条', text: '经营者提供商品或者服务有欺诈行为的，应当按照消费者的要求增加赔偿其受到的损失，增加赔偿的金额为消费者购买商品的价款或者接受服务的费用的三倍。' },
 ];
 
 function addMsg(text, className = 'bot') {
@@ -80,79 +82,85 @@ function addMsg(text, className = 'bot') {
 }
 
 function analyzeRisk(inputText) {
-    let maxLevel = { level: '安全', color: '#00ff00', words: [] };
+    let result = { level: '安全', desc: '未检测到明显风险', words: [] };
     for (const rule of riskDB) {
         const found = rule.words.filter(w => inputText.includes(w));
         if (found.length > 0) {
             if (rule.level === '危险' || 
-               (rule.level === '警告' && maxLevel.level !== '危险') ||
-               (rule.level === '注意' && maxLevel.level !== '危险' && maxLevel.level !== '警告')) {
-                maxLevel = { level: rule.level, color: rule.color, words: found };
+               (rule.level === '警告' && result.level !== '危险') ||
+               (rule.level === '注意' && result.level !== '危险' && result.level !== '警告')) {
+                result = { level: rule.level, desc: rule.desc, words: found };
             }
         }
     }
-    return maxLevel;
+    return result;
 }
 
-function findLaw(inputText) {
-    let matched = [];
+function findLaws(inputText) {
+    const matched = [];
     for (const item of lawDB) {
         if (item.keys.some(k => inputText.includes(k))) {
-            matched.push(item.text);
+            matched.push(item);
         }
     }
+    // 如果没有匹配，返回通用指引
     if (matched.length === 0) {
-        matched.push('根据《民法典》及《网络安全法》，你的情况可依法维权。建议收集证据，通过平台调解功能处理。');
+        matched.push({
+            article: '《网络安全法》第十二条',
+            text: '任何个人和组织使用网络应当遵守宪法法律，不得利用网络从事危害网络安全、荣誉和利益等活动。同时，您可收集证据通过平台调解功能维权。'
+        });
     }
     return matched;
 }send.addEventListener('click', () => {
     const msg = input.value.trim();
     if (!msg) return;
 
-    // 显示用户消息
+    // 用户消息
     addMsg('<strong>你：</strong> ' + msg, 'user');
     input.value = '';
 
-    // 1. 风控分析
-    const risk = analyzeRisk(msg);
-    let riskMsg = '';
-    if (risk.level === '安全') {
-        riskMsg = `✅ <strong>风控等级：安全</strong> —— 没有检测到明显风险，你的提问很友好。`;
-    } else {
-        riskMsg = `⚠️ <strong>风控等级：${risk.level}</strong> —— 检测到关键词：${risk.words.join('、')}`;
-        if (risk.level === '危险') {
-            riskMsg += '<br>🔴 你提到的内容可能涉及严重违法行为，请务必遵守法律，不要实施任何攻击行为。';
-        } else if (risk.level === '警告') {
-            riskMsg += '<br>🟠 请谨慎对待，如你正在遭遇此类困扰，法律会保护你。';
-        } else if (risk.level === '注意') {
-            riskMsg += '<br>🟡 我会帮你理清问题，别担心。';
-        }
-    }
-    addMsg(riskMsg, risk.level === '安全' ? 'info' : 'warning');
-
-    // 2. 法律条文检索
-    const laws = findLaw(msg);
+    // 1. 风控分析（延迟200ms，更像思考）
     setTimeout(() => {
-        addMsg(`<strong>AI小安：</strong> 我为你找到了以下相关法律依据，希望能帮到你：`, 'info');
-        laws.forEach((text, index) => {
-            setTimeout(() => {
-                addMsg(`📖 <strong>条文 ${index+1}：</strong>${text}`, 'article');
-            }, index * 400);
-        });
+        const risk = analyzeRisk(msg);
+        let riskHtml = '';
+        if (risk.level === '安全') {
+            riskHtml = '🤖 我先帮你看了看，没有发现明显的风险词，很安全。';
+        } else {
+            const emoji = { '注意': '🟡', '警告': '🟠', '危险': '🔴' };
+            riskHtml = `🤖 稍等，我检测到一些需要留意的关键词：<b>${risk.words.join('、')}</b>。风险等级：<span style="color:${risk.level==='危险'?'#ff4444':risk.level==='警告'?'#ff8800':'#ffcc00'}">${emoji[risk.level]} ${risk.level}</span> —— ${risk.desc}。`;
+        }
+        addMsg(riskHtml, 'info');
 
-        // 3. 温暖安慰
+        // 2. 法律条文检索（再延迟300ms，逐步给出）
         setTimeout(() => {
-            const comforts = [
-                '无论遇到什么困难，你都不是一个人。法律会站在正义这边。',
-                '如果你现在感到无助，请相信一切都会好起来的。',
-                '别怕，我会一直在这里陪着你。有什么话都可以对我说。',
-                '你已经很勇敢了，愿意说出来就是第一步。',
-                '生活有时会下雨，但总会放晴的。',
-            ];
-            const randomComfort = comforts[Math.floor(Math.random() * comforts.length)];
-            addMsg(`<strong>AI小安：</strong> ${randomComfort} ❤️`, 'bot');
-        }, laws.length * 400 + 200);
-    }, 500);
+            const laws = findLaws(msg);
+            addMsg('📚 根据你提到的情况，我帮你查到了以下规定：', 'info');
+
+            laws.forEach((law, index) => {
+                setTimeout(() => {
+                    addMsg(
+                        `<div style="font-weight:bold;margin-bottom:4px;">📖 ${law.article}</div>
+                         <div style="color:#e0e0e0;">${law.text}</div>`,
+                        'article'
+                    );
+                }, index * 500);
+            });
+
+            // 3. 温暖结尾（最后再延迟一会）
+            const totalDelay = laws.length * 500 + 300;
+            setTimeout(() => {
+                const comforts = [
+                    '不用太担心，法律会保护每一个守法的公民。',
+                    '遇到纠纷不要急，我们一步一步来。',
+                    '你愿意说出来已经很勇敢了，剩下的交给我。',
+                    '记住，你不是一个人在面对这些事情。',
+                    '有任何问题随时可以再来找我，我一直都在。'
+                ];
+                const comfort = comforts[Math.floor(Math.random() * comforts.length)];
+                addMsg(`<strong>AI小安：</strong> ${comfort} ❤️`, 'bot');
+            }, totalDelay);
+        }, 300);
+    }, 200);
 });
 
 input.addEventListener('keypress', e => { if (e.key === 'Enter') send.click(); });
