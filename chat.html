@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .chat-page-container{max-width:800px;margin:40px auto;background:white;border-radius:35px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.1);overflow:hidden;display:flex;flex-direction:column;height:70vh;}
-        .chat-page-header{background:linear-gradient(135deg,#0ea5e9,#8b5cf6);color:white;padding:24px 30px;}
-        .chat-page-body{flex:1;padding:24px;overflow-y:auto;background:#f8fafc;}
-        .message{margin-bottom:20px;display:flex;}
-        .message.user{justify-content:flex-end;}
-        .message-bubble{max-width:70%;padding:14px 20px;border-radius:24px;background:white;box-shadow:0 4px 10px rgba(0,0,0,0.03);}
-        .message.user .message-bubble{background:#0ea5e9;color:white;}
-        .chat-page-input{display:flex;padding:20px;border-top:1px solid #e2e8f0;background:white;}
-        .chat-page-input input{flex:1;padding:16px;border:1px solid #e2e8f0;border-radius:60px;outline:none;}
-        .chat-page-input button{background:linear-gradient(135deg,#f97316,#ec4899);color:white;border:none;padding:0 30px;margin-left:12px;border-radius:60px;font-weight:600;cursor:pointer;}
+        .chat-full{max-width:800px;margin:40px auto;background:var(--glass-bg);backdrop-filter:blur(20px);border-radius:40px;overflow:hidden;display:flex;flex-direction:column;height:75vh;border:1px solid var(--glass-border);}
+        .chat-header{background:linear-gradient(135deg,var(--primary),var(--accent));padding:24px 30px;color:white;}
+        .chat-body{flex:1;padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+        .msg{max-width:75%;padding:14px 20px;border-radius:24px;animation:msgIn 0.4s ease;}
+        .msg.user{align-self:flex-end;background:var(--primary);color:white;}
+        .msg.bot{align-self:flex-start;background:var(--glass-bg);border:1px solid var(--glass-border);}
+        @keyframes msgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        .chat-input{display:flex;padding:20px;gap:12px;background:rgba(0,0,0,0.2);}
+        .chat-input input{flex:1;padding:16px;border-radius:60px;border:none;background:rgba(255,255,255,0.1);color:white;outline:none;}
+        .chat-input button{background:linear-gradient(135deg,var(--orange),var(--pink));border:none;border-radius:60px;padding:0 25px;color:white;font-weight:600;cursor:pointer;}
     </style>
 </head>
 <body>
@@ -30,20 +30,42 @@
         <li><a href="chat.html">智能咨询</a ></li>
     </ul>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-</div></nav><div class="container"><div class="chat-page-container">
-    <div class="chat-page-header"><h2><i class="fas fa-robot"></i> 法安智治 AI 法律助手</h2><p>基于法律大模型，为你解答涉网纠纷问题（当前为模拟版）</p ></div>
-    <div class="chat-page-body" id="chatPageBody">
-        <div class="message"><div class="message-bubble"><strong>AI小安：</strong> 你好！可以问我网络侵权、纠纷调解流程等问题。</div></div>
+</div></nav><div class="container">
+    <div class="chat-full">
+        <div class="chat-header"><h2><i class="fas fa-robot"></i> 法安智治 AI 法律助手</h2></div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot">你好！我是 AI 小安，可以问我网络侵权、纠纷调解流程等问题。</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="输入法律问题...">
+            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
-    <div class="chat-page-input"><input type="text" id="chatPageInput" placeholder="输入你的问题..."><button id="chatPageSendBtn"><i class="fas fa-paper-plane"></i> 发送</button></div>
-</div></div>
+</div>
 <script>
-    const toggle=document.getElementById('menuToggle');const nav=document.getElementById('navLinks');
-    if(toggle)toggle.addEventListener('click',()=>nav.classList.toggle('active'));
-    const body=document.getElementById('chatPageBody');const input=document.getElementById('chatPageInput');const sendBtn=document.getElementById('chatPageSendBtn');
-    function addMessage(text,isUser=true){const msgDiv=document.createElement('div');msgDiv.className='message'+(isUser?' user':'');const bubble=document.createElement('div');bubble.className='message-bubble';bubble.textContent=isUser?text:'AI小安：'+text;msgDiv.appendChild(bubble);body.appendChild(msgDiv);body.scrollTop=body.scrollHeight;}
-    sendBtn.addEventListener('click',()=>{const msg=input.value.trim();if(!msg)return;addMessage(msg,true);input.value='';setTimeout(()=>{let reply='感谢咨询。当前为演示版，后续将接入法律大模型实时分析。';if(msg.includes('谣言'))reply='谣言举报流程：收集证据→平台提交→我们识别并固定存证→交相关部门处理。';addMessage(reply,false);},700);});
-    input.addEventListener('keypress',(e)=>{if(e.key==='Enter')sendBtn.click();});
+    const body=document.getElementById('chatBody'),input=document.getElementById('chatInput'),send=document.getElementById('sendBtn');
+    function addMsg(text,isUser){
+        const div=document.createElement('div');
+        div.className='msg '+(isUser?'user':'bot');
+        div.textContent=text;
+        body.appendChild(div);
+        body.scrollTop=body.scrollHeight;
+    }
+    send.addEventListener('click',()=>{
+        const t=input.value.trim();if(!t)return;
+        addMsg(t,true);input.value='';
+        setTimeout(()=>{
+            let r='感谢咨询。';
+            if(t.includes('谣言'))r='谣言举报流程：收集证据→平台提交→多模态识别→固定存证→交相关部门处理。';
+            else if(t.includes('侵权'))r='网络侵权可在线提交，平台匹配调解员，全程免费。';
+            addMsg(r,false);
+        },800);
+    });
+    input.addEventListener('keypress',e=>{if(e.key==='Enter')send.click();});
+    // 移动端菜单
+    document.getElementById('menuToggle').addEventListener('click',()=>{
+        document.getElementById('navLinks').classList.toggle('active');
+    });
 </script>
 </body>
 </html>
