@@ -8,65 +8,86 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .chat-full{max-width:800px;margin:40px auto;background:var(--glass-bg);backdrop-filter:blur(20px);border-radius:40px;overflow:hidden;display:flex;flex-direction:column;height:75vh;border:1px solid var(--glass-border);}
-        .chat-header{background:linear-gradient(135deg,var(--primary),var(--accent));padding:24px 30px;color:white;}
-        .chat-body{flex:1;padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
-        .msg{max-width:75%;padding:14px 20px;border-radius:24px;animation:msgIn 0.4s ease;}
-        .msg.user{align-self:flex-end;background:var(--primary);color:white;}
-        .msg.bot{align-self:flex-start;background:var(--glass-bg);border:1px solid var(--glass-border);}
-        @keyframes msgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-        .chat-input{display:flex;padding:20px;gap:12px;background:rgba(0,0,0,0.2);}
-        .chat-input input{flex:1;padding:16px;border-radius:60px;border:none;background:rgba(255,255,255,0.1);color:white;outline:none;}
-        .chat-input button{background:linear-gradient(135deg,var(--orange),var(--pink));border:none;border-radius:60px;padding:0 25px;color:white;font-weight:600;cursor:pointer;}
+        .chat-container { max-width: 800px; margin: 40px auto; background: var(--surface); backdrop-filter: var(--blur); border: 1px solid var(--border); border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; height: 75vh; }
+        .chat-header { background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink)); padding: 20px 30px; }
+        .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 12px 20px; border-radius: 20px; animation: msgPop 0.3s ease; }
+        .msg.user { align-self: flex-end; background: var(--neon-cyan); color: #000; }
+        .msg.bot { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+        .warning { background: rgba(255,0,0,0.2); border-left: 3px solid red; color: #ff9999; padding: 8px 16px; margin: 5px 0; border-radius: 8px; }
+        @keyframes msgPop { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .chat-input { display: flex; padding: 15px; background: rgba(0,0,0,0.3); }
+        .chat-input input { flex: 1; padding: 14px; border-radius: 30px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; outline: none; }
+        .chat-input button { margin-left: 10px; background: var(--neon-cyan); border: none; border-radius: 30px; padding: 0 25px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 <nav class="navbar"><div class="container">
     <a href=" " class="logo">法安智治</a >
     <ul class="nav-links" id="navLinks">
-    <li><a href=" " onclick="location.href='home.html';return false;">首页</a ></li>
-    <li><a href="features.html" onclick="location.href='features.html';return false;">核心功能</a ></li>
-    <li><a href="team.html" onclick="location.href='team.html';return false;">团队介绍</a ></li>
-    <li><a href="plan.html" onclick="location.href='plan.html';return false;">实施规划</a ></li>
-    <li><a href="chat.html" onclick="location.href='chat.html';return false;">智能咨询</a ></li>
-</ul>
+        <li><a href="home.html">首页</a ></li><li><a href="features.html">核心功能</a ></li><li><a href="team.html">团队介绍</a ></li><li><a href="plan.html">实施规划</a ></li><li><a href="chat.html">智能咨询</a ></li>
+    </ul>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
 </div></nav><div class="container">
-    <div class="chat-full">
-        <div class="chat-header"><h2><i class="fas fa-robot"></i> 法安智治 AI 法律助手</h2></div>
+    <div class="chat-container">
+        <div class="chat-header"><h2><i class="fas fa-robot"></i> AI 法律助手 · 风控模式</h2></div>
         <div class="chat-body" id="chatBody">
-            <div class="msg bot">你好！我是 AI 小安，可以问我网络侵权、纠纷调解流程等问题。</div>
+            <div class="msg bot">你好！我可以解答法律问题，并自动检测风险关键词。同时可以为你搜索相关法律条文。</div>
         </div>
         <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="输入法律问题...">
-            <button id="sendBtn"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="chatInput" placeholder="输入问题...">
+            <button id="sendBtn"><i class="fas fa-paper-plane"></i> 发送</button>
         </div>
     </div>
 </div>
 <script>
-    const body=document.getElementById('chatBody'),input=document.getElementById('chatInput'),send=document.getElementById('sendBtn');
-    function addMsg(text,isUser){
-        const div=document.createElement('div');
-        div.className='msg '+(isUser?'user':'bot');
-        div.textContent=text;
+    const body = document.getElementById('chatBody'), input = document.getElementById('chatInput'), send = document.getElementById('sendBtn');
+    // 风控关键词库
+    const riskWords = ['攻击', '黑客', '病毒', '恶意代码', '漏洞利用', '人肉', '开盒', '社工库'];
+    function addMsg(text, type, isWarning = false) {
+        const div = document.createElement('div');
+        div.className = 'msg ' + type;
+        if (isWarning) div.classList.add('warning');
+        div.innerHTML = text;
         body.appendChild(div);
-        body.scrollTop=body.scrollHeight;
+        body.scrollTop = body.scrollHeight;
     }
-    send.addEventListener('click',()=>{
-        const t=input.value.trim();if(!t)return;
-        addMsg(t,true);input.value='';
-        setTimeout(()=>{
-            let r='感谢咨询。';
-            if(t.includes('谣言'))r='谣言举报流程：收集证据→平台提交→多模态识别→固定存证→交相关部门处理。';
-            else if(t.includes('侵权'))r='网络侵权可在线提交，平台匹配调解员，全程免费。';
-            addMsg(r,false);
-        },800);
+    function checkRisk(text) {
+        const found = riskWords.filter(w => text.includes(w));
+        if (found.length > 0) {
+            addMsg(`⚠️ 风控警告：检测到潜在风险词：${found.join('、')}，请勿用于非法用途。`, 'bot', true);
+            return true;
+        }
+        return false;
+    }
+    send.addEventListener('click', () => {
+        const msg = input.value.trim();
+        if (!msg) return;
+        addMsg(msg, 'user');
+        input.value = '';
+        const risky = checkRisk(msg);
+        setTimeout(() => {
+            let reply = '感谢咨询。';
+            if (msg.includes('谣言')) reply = '谣言举报：收集证据 → 平台提交 → 识别存证 → 交相关部门。';
+            else if (msg.includes('侵权')) reply = '网络侵权可在线提交，匹配调解员，全程免费。';
+            else reply = '已收到问题，建议参考相关法律法规。';
+            if (!risky) {
+                reply += ' 是否需要帮你搜索相关法律条文？回复“搜索”即可。';
+            }
+            addMsg(reply, 'bot');
+            // 自动构造搜索链接（用户回复“搜索”触发）
+            if (msg.includes('搜索')) {
+                const query = encodeURIComponent(msg.replace('搜索', '') + ' 法律条文');
+                setTimeout(() => {
+                    window.open(`https://www.baidu.com/s?wd=${query}`, '_blank');
+                    addMsg('已为你打开浏览器搜索相关法律条文。', 'bot');
+                }, 1000);
+            }
+        }, 800);
     });
-    input.addEventListener('keypress',e=>{if(e.key==='Enter')send.click();});
+    input.addEventListener('keypress', e => { if (e.key === 'Enter') send.click(); });
     // 移动端菜单
-    document.getElementById('menuToggle').addEventListener('click',()=>{
-        document.getElementById('navLinks').classList.toggle('active');
-    });
+    document.getElementById('menuToggle').addEventListener('click', ()=> document.getElementById('navLinks').classList.toggle('active'));
 </script>
 </body>
 </html>

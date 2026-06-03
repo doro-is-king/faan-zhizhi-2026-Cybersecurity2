@@ -9,26 +9,13 @@
         link.addEventListener('click', () => nav.classList.remove('active'));
     });
 
-    // 视差滚动效果
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        document.querySelectorAll('.frame-section').forEach(section => {
-            const speed = section.dataset.speed || 0.5;
-            section.style.backgroundPositionY = -(scrolled * speed) + 'px';
-        });
-    });
-
-    // 入场动画观察器
+    // 滚动入场动画
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.style.animationPlayState = 'running';
+                entry.target.classList.add('fade-up');
             }
         });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.glass-card, .team-member, .timeline-item').forEach(el => {
-        el.style.animation = 'fadeInUp 0.8s ease-out forwards';
-        el.style.animationPlayState = 'paused';
-        observer.observe(el);
-    });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('.glass-panel, .feature-card, .team-card, .plan-node').forEach(el => observer.observe(el));
 })();

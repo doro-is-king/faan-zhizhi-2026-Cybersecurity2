@@ -3,59 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>法安智治 · 首页</title>
+    <title>法安智治 · 导航</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;max-width:1100px;margin:60px auto;padding:0 20px;}
-        .nav-card{background:var(--glass-bg);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:40px;padding:40px 30px;text-decoration:none;color:white;transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;overflow:hidden;transform-style:preserve-3d;perspective:1000px;}
-        .nav-card:hover{transform:translateY(-10px) rotateX(3deg);box-shadow:0 30px 50px rgba(14,165,233,0.3);}
-        .nav-card .card-icon{font-size:3rem;margin-bottom:20px;}
-        .nav-card h2{font-size:2rem;margin-bottom:10px;}
-        .card-bg{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at center,var(--card-color) 0%,transparent 70%);opacity:0;transition:opacity 0.5s;}
-        .nav-card:hover .card-bg{opacity:0.15;}
+        .hex-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin: 80px auto; max-width: 1000px; }
+        .hex-item {
+            width: 200px; height: 200px; background: var(--surface); backdrop-filter: var(--blur);
+            border: 1px solid var(--border); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: var(--text); transition: 0.4s; cursor: pointer; position: relative;
+        }
+        .hex-item:hover { border-color: var(--neon-cyan); box-shadow: 0 0 40px rgba(0,255,255,0.3); transform: scale(1.05); }
+        .hex-item i { font-size: 2.5rem; margin-bottom: 10px; }
+        .hex-item h3 { font-size: 1.3rem; text-align: center; }
     </style>
 </head>
 <body>
-<nav class="navbar">
-    <div class="container">
-        <a href=" " class="logo">法安智治</a >
-        <ul class="nav-links" id="navLinks">
-    <li><a href=" " onclick="location.href='home.html';return false;">首页</a ></li>
-    <li><a href="features.html" onclick="location.href='features.html';return false;">核心功能</a ></li>
-    <li><a href="team.html" onclick="location.href='team.html';return false;">团队介绍</a ></li>
-    <li><a href="plan.html" onclick="location.href='plan.html';return false;">实施规划</a ></li>
-    <li><a href="chat.html" onclick="location.href='chat.html';return false;">智能咨询</a ></li>
-</ul>
-        <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-    </div>
-</nav><main class="card-grid">
-    <a href=" " class="nav-card" style="--card-color:#0ea5e9;">
-        <div class="card-bg"></div>
-        <div class="card-icon" style="color:#0ea5e9;"><i class="fas fa-shield-haltered"></i></div>
-        <h2>核心功能</h2>
-        <p>多模态监测 · 智能调解 · 区块链存证</p >
-    </a >
-    <a href="team.html" class="nav-card" style="--card-color:#ec4899;">
-        <div class="card-bg"></div>
-        <div class="card-icon" style="color:#ec4899;"><i class="fas fa-users"></i></div>
-        <h2>团队介绍</h2>
-        <p>跨专业青年团队 · 双导师制</p >
-    </a >
-    <a href="plan.html" class="nav-card" style="--card-color:#f97316;">
-        <div class="card-bg"></div>
-        <div class="card-icon" style="color:#f97316;"><i class="fas fa-calendar-alt"></i></div>
-        <h2>实施规划</h2>
-        <p>四阶段 · 36个月清晰路径</p >
-    </a >
-    <a href="chat.html" class="nav-card" style="--card-color:#8b5cf6;">
-        <div class="card-bg"></div>
-        <div class="card-icon" style="color:#8b5cf6;"><i class="fas fa-robot"></i></div>
-        <h2>智能咨询</h2>
-        <p>AI 法律助手 · 实时解答</p >
-    </a >
-</main>
+<nav class="navbar"><div class="container">
+    <a href=" " class="logo">法安智治</a >
+    <ul class="nav-links" id="navLinks">
+        <li><a href="home.html">首页</a ></li><li><a href="features.html">核心功能</a ></li><li><a href="team.html">团队介绍</a ></li><li><a href="plan.html">实施规划</a ></li><li><a href="chat.html">智能咨询</a ></li>
+    </ul>
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+</div></nav><div class="hex-grid">
+    <a href=" " class="hex-item"><i class="fas fa-shield-alt" style="color:var(--neon-cyan)"></i><h3>核心功能</h3></a >
+    <a href="team.html" class="hex-item"><i class="fas fa-users" style="color:var(--neon-pink)"></i><h3>团队介绍</h3></a >
+    <a href="plan.html" class="hex-item"><i class="fas fa-calendar-check" style="color:var(--neon-yellow)"></i><h3>实施规划</h3></a >
+    <a href="chat.html" class="hex-item"><i class="fas fa-robot" style="color:var(--neon-green)"></i><h3>智能咨询</h3></a >
+</div>
 <footer class="footer"><div class="container">© 2026 法安智治</div></footer>
 <script src="script.js"></script>
 </body>
