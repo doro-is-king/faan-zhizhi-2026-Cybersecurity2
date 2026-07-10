@@ -7,6 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .search-box { max-width: 700px; margin: 40px auto; text-align: center; }
+        .search-box input { width: 100%; padding: 16px 24px; border-radius: 60px; border: 1px solid var(--border-light); background: white; font-size: 1.1rem; outline: none; box-shadow: var(--shadow-sm); }
+        .search-box input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(30,136,229,0.1); }
+        .result-section { max-width: 1000px; margin: 0 auto; }
+        .result-section h2 { font-size: 2rem; margin: 30px 0 20px; color: var(--text-dark); }
+        .law-item, .case-item, .interpret-item { background: white; border-radius: 18px; padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-light); }
+        .law-item h3, .case-item h3, .interpret-item h3 { font-size: 1.4rem; color: var(--primary-blue); margin-bottom: 10px; }
+        .law-item p, .case-item p, .interpret-item p { color: var(--text-muted); line-height: 1.6; }
+        .tag { display: inline-block; background: var(--primary-light); color: var(--primary-blue); padding: 4px 12px; border-radius: 20px; font-size: 0.9rem; margin-right: 8px; }
+    </style>
 </head>
 <body>
 <nav class="navbar"><div class="container">
@@ -17,14 +28,119 @@
         <li><a href="chat.html">智能助手</a ></li>
     </ul>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-</div></nav>
-<main class="section">
-    <div class="container" style="text-align:center;">
-        <h1 style="font-size:2.5rem; color:var(--text-dark);">📚 网络法治知识库</h1>
-        <p style="margin-top:20px; color:var(--text-muted);">这里将展示常见网络法律案例、法规解读，敬请期待。</p >
+</div></nav><main class="section">
+    <div class="container">
+        <h1 style="text-align:center; font-size:2.5rem; color:var(--text-dark);">📚 网络法治知识库</h1>
+        <p style="text-align:center; color:var(--text-muted); margin-bottom:10px;">搜索关键词，查看相关法律条文、典型案例与解读</p >
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="输入关键词，如：谣言、诈骗、隐私、网暴、借贷……">
+        </div>
+        <div id="resultsContainer" class="result-section"></div>
     </div>
 </main>
 <footer class="footer"><div class="container">© 2026 法安智治</div></footer>
 <script src="script.js"></script>
+<script>// ========== 法律条文库 ==========
+const lawArticles = [
+    { id:1, title:'《网络安全法》第十二条', content:'任何个人和组织使用网络应当遵守宪法法律，遵守公共秩序，尊重社会公德，不得危害网络安全，不得利用网络从事危害国家安全、荣誉和利益，煽动颠覆国家政权、推翻社会主义制度，煽动分裂国家、破坏国家统一，宣扬恐怖主义、极端主义，宣扬民族仇恨、民族歧视，传播暴力、淫秽色情信息，编造、传播虚假信息扰乱经济秩序和社会秩序，以及侵害他人名誉、隐私、知识产权和其他合法权益等活动。', tags:['网络安全','虚假信息','谣言','隐私','名誉权'] },
+    { id:2, title:'《网络安全法》第四十四条', content:'任何个人和组织不得窃取或者以其他非法方式获取个人信息，不得非法出售或者非法向他人提供个人信息。', tags:['个人信息','隐私泄露','非法获取'] },
+    { id:3, title:'《数据安全法》第三十二条', content:'任何组织、个人收集数据，应当采取合法、正当的方式，不得窃取或者以其他非法方式获取数据。', tags:['数据安全','个人信息','非法收集'] },
+    { id:4, title:'《个人信息保护法》第十条', content:'任何组织、个人不得非法收集、使用、加工、传输他人个人信息，不得非法买卖、提供或者公开他人个人信息。', tags:['个人信息','隐私','非法买卖','公开'] },
+    { id:5, title:'《民法典》第一千零一十九条', content:'任何组织或者个人不得以丑化、污损或者利用信息技术手段伪造等方式侵害他人的肖像权。未经肖像权人同意，不得制作、使用、公开肖像权人的肖像。', tags:['肖像权','盗用照片','信息技术'] },
+    { id:6, title:'《民法典》第一千零二十四条', content:'民事主体享有名誉权。任何组织或者个人不得以侮辱、诽谤等方式侵害他人的名誉权。', tags:['名誉权','侮辱','诽谤','网暴'] },
+    { id:7, title:'《治安管理处罚法》第二十五条', content:'散布谣言，谎报险情、疫情、警情或者以其他方法故意扰乱公共秩序的，处五日以上十日以下拘留，可以并处五百元以下罚款。', tags:['谣言','拘留','罚款'] },
+    { id:8, title:'《治安管理处罚法》第四十二条', content:'公然侮辱他人或者捏造事实诽谤他人的，处五日以下拘留或者五百元以下罚款。', tags:['侮辱','诽谤','恐吓','网暴'] },
+    { id:9, title:'《刑法》第二百八十五条', content:'非法侵入计算机信息系统，处三年以下有期徒刑或者拘役。', tags:['黑客','计算机犯罪','侵入'] },
+    { id:10, title:'《刑法》第二百九十一条之一', content:'编造虚假的险情、疫情、灾情、警情在网络上传播，严重扰乱社会秩序的，处三年以下有期徒刑、拘役或者管制。', tags:['谣言','虚假信息','传播','刑事责任'] },
+    { id:11, title:'《刑法》第二百六十六条', content:'诈骗公私财物，数额较大的，处三年以下有期徒刑、拘役或者管制，并处或者单处罚金。', tags:['诈骗','网络诈骗','刑事责任'] },
+    { id:12, title:'《反电信网络诈骗法》第二十五条', content:'任何单位和个人不得为他人实施电信网络诈骗活动提供出售、提供个人信息等帮助。', tags:['电信诈骗','个人信息','洗钱'] },
+    { id:13, title:'《网络暴力信息治理规定》第七条', content:'网络信息服务提供者应当建立健全网络暴力信息预警、识别、处置机制。', tags:['网络暴力','网暴','平台责任'] },
+    { id:14, title:'《消费者权益保护法》第五十五条', content:'经营者有欺诈行为的，应退一赔三。', tags:['网购','欺诈','退一赔三'] },
+    { id:15, title:'《著作权法》第四十八条', content:'未经许可通过信息网络传播作品，应承担停止侵害、赔偿损失等责任。', tags:['著作权','盗版','网络传播'] },
+    { id:16, title:'《民法典》第六百七十九条', content:'自然人之间的借款合同，自贷款人提供借款时成立。', tags:['民间借贷','微信借款','电子证据'] },
+    { id:17, title:'《民事诉讼法》第二十四条', content:'因合同纠纷提起的诉讼，由被告住所地或者合同履行地人民法院管辖。', tags:['借贷','管辖','合同纠纷'] },
+];
+
+// ========== 典型案例库 ==========
+const casesDB = [
+    { id:1, title:'“微信群内辱骂他人”名誉权纠纷案', summary:'张某在社区微信群对李某辱骂，法院认定构成名誉权侵权，判决公开道歉并赔偿精神损害。', tags:['网暴','微信群','名誉权','辱骂'] },
+    { id:2, title:'“转发疫情谣言”被行政拘留案', summary:'吴某未经核实转发虚假疫情信息造成恐慌，被行政拘留七日。', tags:['谣言','转发','行政拘留','虚假信息'] },
+    { id:3, title:'“人肉搜索致人自杀”案', summary:'蔡某组织人肉搜索致被害人自杀未遂，因侵犯公民个人信息罪被判刑。', tags:['人肉搜索','个人信息','刑事责任','隐私'] },
+    { id:4, title:'“刷单返利”电信诈骗案', summary:'大学生小刘被拉入刷单群被骗3万元，诈骗团伙成员被判处有期徒刑。', tags:['诈骗','刷单','电信诈骗','学生'] },
+    { id:5, title:'“微信借款不还”民间借贷胜诉案', summary:'赵某凭微信聊天记录和转账凭证起诉，法院判决偿还借款及利息。', tags:['微信借款','民间借贷','聊天记录','胜诉'] },
+    { id:6, title:'“短视频配乐侵权”著作权纠纷案', summary:'自媒体未经授权使用音乐，被判侵权并赔偿损失。', tags:['著作权','短视频','侵权'] },
+    { id:7, title:'“网购假货”退一赔三案', summary:'李女士买到假化妆品，法院判决商家退还货款并三倍赔偿。', tags:['网购','假货','退一赔三','消费者权益'] },
+];
+
+// ========== 解读库 ==========
+const interpretations = [
+    { id:1, title:'如何理解“网络谣言”的法律责任？', content:'网络谣言可能面临行政拘留，若编造虚假警情、疫情并传播严重扰乱社会秩序，可构成犯罪。转发者若明知是假仍转发也可能被追究。请记住：不转发、不评论、及时举报。', tags:['谣言','转发','法律责任'] },
+    { id:2, title:'遭遇网络暴力如何维权？', content:'保留所有辱骂言论、发布者ID等电子证据，向平台举报，严重时报警并可提起民事诉讼要求赔礼道歉、赔偿精神损失。', tags:['网暴','维权','证据保全'] },
+    { id:3, title:'个人信息被泄露怎么办？', content:'立即修改相关账号密码，保留泄露证据，向网信部门投诉，造成严重后果可报警追究刑责。', tags:['个人信息','泄露','报警'] },
+    { id:4, title:'微信聊天记录能当证据吗？', content:'可以。微信聊天记录属于电子证据，只要能证明双方身份且内容完整，可提交法庭。建议保持原始记录，必要时公证。', tags:['微信','证据','电子证据','民间借贷'] },
+    { id:5, title:'网络诈骗报案黄金时间', content:'立即拨打96110反诈专线并前往派出所报案。被骗后半小时是资金拦截黄金期，同时保留聊天记录、转账截图。', tags:['诈骗','报案','96110'] },
+];// ========== 搜索函数 ==========
+function searchKeyword(query) {
+    if (!query.trim()) return { laws:[], cases:[], interpretations:[] };
+    const q = query.toLowerCase();
+    const filter = (item) => item.tags.some(tag => tag.includes(q)) || item.title.includes(q) || item.content.includes(q) || (item.summary && item.summary.includes(q));
+    return {
+        laws: lawArticles.filter(filter),
+        cases: casesDB.filter(filter),
+        interpretations: interpretations.filter(filter),
+    };
+}
+
+function renderResults(results) {
+    const container = document.getElementById('resultsContainer');
+    container.innerHTML = '';
+    if (results.laws.length + results.cases.length + results.interpretations.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:var(--text-muted);">没有找到相关内容，请尝试其他关键词。</p >';
+        return;
+    }
+    if (results.laws.length > 0) {
+        const sec = document.createElement('div');
+        sec.innerHTML = '<h2>⚖️ 法律条文</h2>';
+        results.laws.forEach(item => {
+            sec.innerHTML += `<div class="law-item"><h3>${item.title}</h3><p>${item.content}</p ><div>${item.tags.map(t=>'<span class="tag">'+t+'</span>').join('')}</div></div>`;
+        });
+        container.appendChild(sec);
+    }
+    if (results.cases.length > 0) {
+        const sec = document.createElement('div');
+        sec.innerHTML = '<h2>📋 典型案例</h2>';
+        results.cases.forEach(item => {
+            sec.innerHTML += `<div class="case-item"><h3>${item.title}</h3><p>${item.summary}</p ><div>${item.tags.map(t=>'<span class="tag">'+t+'</span>').join('')}</div></div>`;
+        });
+        container.appendChild(sec);
+    }
+    if (results.interpretations.length > 0) {
+        const sec = document.createElement('div');
+        sec.innerHTML = '<h2>📖 法律解读</h2>';
+        results.interpretations.forEach(item => {
+            sec.innerHTML += `<div class="interpret-item"><h3>${item.title}</h3><p>${item.content}</p ><div>${item.tags.map(t=>'<span class="tag">'+t+'</span>').join('')}</div></div>`;
+        });
+        container.appendChild(sec);
+    }
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const results = searchKeyword(e.target.value);
+    renderResults(results);
+});
+
+// 默认展示热门内容
+window.addEventListener('load', () => {
+    const defaultResults = {
+        laws: lawArticles.filter(item => item.tags.includes('谣言') || item.tags.includes('个人信息')),
+        cases: casesDB.filter(item => item.tags.includes('网暴') || item.tags.includes('诈骗')),
+        interpretations: interpretations.slice(0,2)
+    };
+    renderResults(defaultResults);
+});    // 移动端菜单
+    document.getElementById('menuToggle').addEventListener('click', () => {
+        document.getElementById('navLinks').classList.toggle('active');
+    });
+</script>
 </body>
 </html>
