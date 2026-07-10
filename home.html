@@ -3,37 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>法安智治 · 导航</title>
+    <title>法安智治 · 首页</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .hex-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin: 80px auto; max-width: 1000px; }
-        .hex-item {
-            width: 200px; height: 200px; background: var(--surface); backdrop-filter: var(--blur);
-            border: 1px solid var(--border); clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; color: var(--text); transition: 0.4s; cursor: pointer; position: relative;
-        }
-        .hex-item:hover { border-color: var(--neon-cyan); box-shadow: 0 0 40px rgba(0,255,255,0.3); transform: scale(1.05); }
-        .hex-item i { font-size: 2.5rem; margin-bottom: 10px; }
-        .hex-item h3 { font-size: 1.3rem; text-align: center; }
+        .home-hero { text-align: center; padding: 40px 0 20px; }
+        .home-hero h1 { font-size: 2.6rem; color: var(--text-dark); }
+        .home-hero p { color: var(--text-muted); font-size: 1.2rem; margin-top: 10px; }
+        .card-grid { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin: 40px auto; max-width: 1000px; }
+        .func-card { flex: 1; min-width: 260px; text-align: center; }
+        .func-card i { font-size: 3rem; color: var(--primary-blue); margin-bottom: 15px; }
+        .func-card h3 { font-size: 1.6rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 <nav class="navbar"><div class="container">
-    <a href=" " class="logo">法安智治</a >
+    <a href=" " class="logo">法安智治 · 您的全能网络法治守护者</a >
     <ul class="nav-links" id="navLinks">
-        <li><a href="home.html">首页</a ></li><li><a href="features.html">核心功能</a ></li><li><a href="team.html">团队介绍</a ></li><li><a href="plan.html">实施规划</a ></li><li><a href="chat.html">智能咨询</a ></li>
+        <li><a href="home.html">首页</a ></li>
+        <li><a href="law-center.html">普法中心</a ></li>
+        <li><a href="chat.html">智能助手</a ></li>
     </ul>
     <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-</div></nav><div class="hex-grid">
-    <a href=" " class="hex-item"><i class="fas fa-shield-alt" style="color:var(--neon-cyan)"></i><h3>核心功能</h3></a >
-    <a href="team.html" class="hex-item"><i class="fas fa-users" style="color:var(--neon-pink)"></i><h3>团队介绍</h3></a >
-    <a href="plan.html" class="hex-item"><i class="fas fa-calendar-check" style="color:var(--neon-yellow)"></i><h3>实施规划</h3></a >
-    <a href="chat.html" class="hex-item"><i class="fas fa-robot" style="color:var(--neon-green)"></i><h3>智能咨询</h3></a >
-</div>
-<footer class="footer"><div class="container">© 2026 法安智治</div></footer>
+</div></nav><main>
+    <div class="home-hero">
+        <h1>您的全能网络法治守护者</h1>
+        <p>风险监测 · 纠纷调解 · 证据存证，一体化平台</p >
+    </div>
+    <div class="card-grid">
+        <div class="card func-card">
+            <i class="fas fa-eye"></i>
+            <h3>风险智能监测</h3>
+            <p>多模态识别网络谣言、网暴、诈骗，实时预警</p >
+        </div>
+        <div class="card func-card">
+            <i class="fas fa-hand-holding-heart"></i>
+            <h3>涉网纠纷调解</h3>
+            <p>AI 法律辅助，线上调解，一键司法确认</p >
+        </div>
+        <div class="card func-card">
+            <i class="fas fa-link"></i>
+            <h3>电子证据存证</h3>
+            <p>区块链固证，不可篡改，司法链可验</p >
+        </div>
+    </div>
+</main>
+<footer class="footer"><div class="container">© 2026 法安智治 · 全能网络法治守护者</div></footer>
 <script src="script.js"></script>
 </body>
 </html>
