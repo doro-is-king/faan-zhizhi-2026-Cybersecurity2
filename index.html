@@ -6,42 +6,24 @@
     <title>法安智治 · 欢迎</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
     <style>
-        body { background: #000; overflow: hidden; height: 100vh; }
-        canvas { position: fixed; top: 0; left: 0; z-index: 0; }
-        .welcome-container { position: relative; z-index: 1; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .neon-title { font-size: 6rem; font-weight: 900; letter-spacing: 6px; color: #fff; text-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-pink); animation: flicker 3s infinite alternate; }
-        @keyframes flicker { 0% { opacity: 1; } 50% { opacity: 0.9; } 100% { opacity: 1; } }
-        .sub { font-size: 1.6rem; color: var(--text-dim); margin: 20px 0 40px; }
-        .enter-btn {
-            padding: 16px 50px; border-radius: 60px; font-size: 1.4rem; font-weight: 700;
-            background: transparent; border: 2px solid var(--neon-cyan); color: var(--neon-cyan);
-            cursor: pointer; transition: 0.3s; text-decoration: none;
-            box-shadow: 0 0 20px rgba(0,255,255,0.3);
-        }
-        .enter-btn:hover { background: var(--neon-cyan); color: #000; box-shadow: 0 0 50px var(--neon-cyan); }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Inter',sans-serif;overflow:hidden;height:100vh;display:flex;align-items:center;justify-content:center;
+            background:linear-gradient(135deg,#f0f7ff,#e3f2fd);}
+        .welcome-container{text-align:center;color:#1e293b;animation:fadeInUp 1.2s ease-out;}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+        .welcome-logo{font-size:5rem;font-weight:800;color:#1e88e5;margin-bottom:20px;}
+        .welcome-sub{font-size:1.8rem;font-weight:300;margin-bottom:50px;color:#334155;}
+        .btn-enter{display:inline-block;padding:18px 50px;border-radius:80px;background:#1e88e5;color:white;font-size:1.4rem;font-weight:700;text-decoration:none;box-shadow:0 10px 30px rgba(30,136,229,0.3);transition:all 0.3s;cursor:pointer;animation:pulse 2s infinite;}
+        .btn-enter:hover{transform:scale(1.08);box-shadow:0 15px 40px rgba(30,136,229,0.5);}
+        @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,136,229,0.4);}70%{box-shadow:0 0 0 20px rgba(30,136,229,0);}100%{box-shadow:0 0 0 0 rgba(30,136,229,0);}}
     </style>
 </head>
 <body>
-<canvas id="stars"></canvas>
-<script>
-    const canvas = document.getElementById('stars'), ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const stars = Array(200).fill().map(() => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2, d: Math.random()*100 }));
-    function draw() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = 'white';
-        stars.forEach(s => {
-            ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
-        });
-        requestAnimationFrame(draw);
-    }
-    draw();
-</script><div class="welcome-container">
-    <div class="neon-title">法安智治</div>
-   <div class="welcome-sub">您的全能网络法治守护者</div>
-    <button class="enter-btn" onclick="location.href='home.html'">✦ 进入系统</button>
-</div>
+    <div class="welcome-container">
+        <div class="welcome-logo">法安智治</div>
+        <div class="welcome-sub">您的全能网络法治守护者</div>
+        <a href=" " class="btn-enter">✨ 欢迎进入</a >
+    </div>
 </body>
 </html>
